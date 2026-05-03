@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificador de secado - Silos de cuarzo</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--line:#d9e2ef;--txt:#172033;--muted:#5d6b82;--accent:#2563eb;--ok:#16803a;--warn:#b7791f;--bad:#c53030;--soft:#eef4ff}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:var(--txt);font-size:14px}.wrap{max-width:1680px;margin:0 auto;padding:18px}h1{font-size:24px;margin:0 0 14px}h2{font-size:18px;margin:0 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 1px 4px #0001}.grid{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:10px}.field label{display:block;font-weight:700;margin-bottom:5px;color:var(--muted)}input,select,button{font:inherit}input,select{width:100%;padding:7px;border:1px solid #b8c4d6;border-radius:8px;background:#fff}button{border:0;border-radius:10px;background:var(--accent);color:#fff;padding:10px 14px;font-weight:700;cursor:pointer;margin:4px 6px 4px 0}button.secondary{background:#475569}button.folderBtn{background:#facc15;color:#1f2937;border:1px solid #d97706}button.danger{background:#b91c1c}button.light{background:#64748b}.buttons{display:flex;flex-wrap:wrap;align-items:center}.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;max-height:70vh}table{border-collapse:collapse;width:100%;min-width:920px}th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle}th{background:#eaf1fb;position:sticky;top:0;z-index:1}td.left,th.left{text-align:left}.center input,.center select,.center{text-align:center}.wetAvail input{max-width:85px;text-align:center}.rateInput input{max-width:90px;text-align:center}.spacerCol{border-left:12px solid #fff} @media print{body{background:#fff;font-size:11pt}.wrap{max-width:none;padding:0}.card{box-shadow:none;border:0;margin-bottom:10px;break-inside:avoid}.noPrint,.buttons,.sectionHead button{display:none!important}.tableWrap{overflow:visible;max-height:none;border:0}th{position:static}select,input{border:0;background:transparent;text-align:center}h1{font-size:18pt}h2{font-size:14pt}.printOnly{display:block!important}}.small{font-size:12px;color:var(--muted)}.summary{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:8px}.kpi{background:var(--soft);border:1px solid #c8d8f6;border-radius:12px;padding:10px}.kpi b{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.kpi span{font-size:18px;font-weight:800}.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-weight:700}.pill.ok{background:#dcfce7;color:var(--ok)}.pill.warn{background:#fef3c7;color:var(--warn)}.pill.bad{background:#fee2e2;color:var(--bad)}.resultDay{margin-top:14px;border-left:5px solid var(--accent);padding-left:10px}.muted{color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.finalStateTable{min-width:0;table-layout:fixed}.finalStateTable th,.finalStateTable td{padding:4px 3px}.finalStateTable .colSilo{width:44px}.finalStateTable .colProduct{width:70px;max-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.finalStateTable .colTons,.finalStateTable .colGap{width:55px}.wetFinalTable{min-width:0;table-layout:fixed}.wetFinalTable th,.wetFinalTable td{padding:4px 3px}.wetFinalTable .colWetProduct{width:95px;max-width:95px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wetFinalTable .colWetTons{width:70px}.notice{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px;margin:8px 0}.notice.alert{background:#fee2e2;border-color:#ef4444;color:#7f1d1d}.notice.alert b{color:#991b1b}.notice.ok{background:#dcfce7;border-color:#22c55e;color:#14532d}.inactiveSilo{opacity:.45;background:#f1f5f9}.hidden{display:none}.jsonInfo{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:8px;margin-top:8px}.jsonInfo .box{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:8px}.jsonInfo b{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}@media(max-width:900px){.jsonInfo{grid-template-columns:1fr}}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.sectionHead button{padding:7px 10px;background:#64748b}.collapsed .tableWrap,.collapsed .small{display:none}@media(max-width:900px){.grid,.summary,.two{grid-template-columns:1fr}.wrap{padding:10px}table{min-width:760px}}
+.planTable{table-layout:fixed;min-width:920px}.planTable .colDay{width:80px}.planTable .colTime{width:90px}.planTable .colType{width:90px}.planTable .colDetails{width:auto}.planTable .colDuration{width:90px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Planificador de secado - Silos de cuarzo</h1>
+<div class="card">
+  <div class="grid">
+    <div class="field"><label>Camión (t)</label><input id="truckT" type="number" step="0.1" value="28"></div>
+    <div class="field"><label>Horas/día</label><input id="hoursDay" type="number" step="0.1" value="24"></div>
+    <div class="field"><label>Mínimo lote a secar (t)</label><input id="minLot" type="number" step="1" value="180"></div>
+    <div class="field"><label>Máximo lote a secar (t)</label><input id="maxLot" type="number" step="1" value="400"></div>
+    <div class="field"><label>RP0508S → RP0104S (%)</label><input id="pct0508to0104" type="number" step="0.1" value="8"></div>
+    <div class="field"><label>RP0816S → RP0508S (%)</label><input id="pct0816to0508" type="number" step="0.1" value="12"></div>
+  </div>
+  <div class="grid" style="margin-top:10px">
+    <div class="field"><label>Silo destino RP0104S al secar RP0508S</label><select id="dest0508to0104"></select></div>
+    <div class="field"><label>Silo destino RP0508S al secar RP0816S</label><select id="dest0816to0508"></select></div>
+  </div>
+  <div class="buttons">
+    <button id="btnCalc">Calcular previsión</button>
+    <button id="btnScenario" class="secondary">Comprobar escenarios lote mínimo</button>
+    <button id="btnExport" class="secondary">Exportar JSON</button>
+    <button id="btnImport" class="secondary">Importar JSON</button>
+    <button id="btnDefault" class="light">Restaurar defecto</button>
+    <button id="btnClear" class="danger">Anular previsión</button>
+    <button id="btnPrint" class="secondary">Imprimir PDF resumen y previsión</button>
+    <button id="btnPrintTablesPdf" class="secondary">Imprimir PDF cargas, envasados y silos</button>
+    <button id="btnFolder" class="folderBtn">Seleccionar carpeta JSON</button>
+    <input id="importFile" class="hidden" type="file" accept="application/json,.json">
+  </div>
+  <div class="jsonInfo">
+    <div class="box"><b>Ruta carpeta JSON</b><span id="jsonFolderPath">No seleccionada</span></div>
+    <div class="box"><b>Nombre archivo JSON</b><span id="jsonFileName">planificador_secado_cuarzo.json</span></div>
+    <div class="box"><b>Última actualización</b><span id="jsonLastUpdate">Sin guardar</span></div>
+  </div>
+</div>
+<div class="card">
+  <h2>Importar datos desde SAP</h2>
+  <p class="small">Para pendientes SAP puedes importar Excel/CSV con columnas como <b>Fecha plan. de carga</b>, <b>PRODUCTO</b> y <b>Nº de cargas</b>. Se filtrarán las referencias que contengan <b>RP</b>, <b>FV2000</b>, <b>SAC/SACO/BB/BIGBAG</b> o <b>arena</b>. Las referencias de envasado se pasarán a “Envasados pendientes por día”, salvo si contienen FV016 o FC.</p>
+  <div class="grid" style="margin-bottom:8px">
+    <div class="field"><label>Fecha inicial pendientes SAP</label><input id="sapStartDate" type="date"></div>
+    <div class="field"><label>Fecha final pendientes SAP</label><input id="sapEndDate" type="date"></div>
+  </div>
+  <div class="buttons">
+    <button id="btnImportPendingCsv" class="secondary">Importar pendientes SAP Excel/CSV</button>
+    <input id="pendingCsvFile" class="hidden" type="file" accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+  </div>
+  <div id="sapImportResult" class="muted">Importa los pendientes SAP para actualizar las cargas previstas de la semana entre las dos fechas indicadas.</div>
+</div>
+<div class="card"><h2>Resumen general</h2><div class="summary" id="generalSummary"></div></div>
+<div class="card"><h2>Comparación de escenarios por lote mínimo</h2><div id="scenarioOutput" class="muted">Pulsa “Comprobar escenarios lote mínimo” para comparar 28, 100, 150, 180 y 400 t.</div></div>
+<div class="card"><h2>Pedido adicional y replanificación</h2>
+  <div class="grid">
+    <div class="field"><label>Producto seco adicional</label><select id="extraProduct"></select></div>
+    <div class="field"><label>Día solicitado</label><select id="extraDay"></select></div>
+    <div class="field"><label id="extraQtyLabel">Camiones adicionales</label><input id="extraTrucks" type="number" min="0" step="1" value="1"></div>
+    <div class="field"><label>Toneladas pedido envasado</label><input id="extraPackTons" type="number" min="0" step="0.01" value="28"></div>
+  </div>
+  <div class="buttons"><button id="btnExtraReplan" class="secondary">Añadir pedido y replanificar</button><button id="btnCheckExtraAvailability" class="light">Comprobar disponibilidad</button></div>
+  <div id="extraResult" class="muted">Añade un pedido extra para comprobar si puede servirse ese día o desde qué día sería posible.</div>
+</div>
+<div class="card"><h2>Anular camiones y replanificación</h2>
+  <div class="grid">
+    <div class="field"><label>Producto seco a anular</label><select id="cancelProduct"></select></div>
+    <div class="field"><label>Día de carga</label><select id="cancelDay"></select></div>
+    <div class="field"><label>Camiones a anular</label><input id="cancelTrucks" type="number" min="0" step="1" value="1"></div>
+  </div>
+  <div class="buttons"><button id="btnCancelReplan" class="danger">Anular camiones y replanificar</button></div>
+  <div id="cancelResult" class="muted">Anula camiones previstos de un producto y día. Después se recalcula toda la planificación.</div>
+</div>
+<div class="card"><h2>Sustituir una orden planificada y replanificar</h2>
+  <div class="grid">
+    <div class="field"><label>Día de la orden</label><select id="replaceDay"></select></div>
+    <div class="field"><label>Orden planificada a sustituir</label><select id="replaceOrder"></select></div>
+    <div class="field"><label>Nuevo producto a secar</label><select id="replaceProduct"></select></div>
+    <div class="field"><label>Nuevas toneladas</label><input id="replaceTons" type="number" min="0" step="1" value="180"></div>
+    <div class="field"><label>Hora mínima de inicio</label><input id="replaceStartTime" type="time" value=""></div>
+  </div>
+  <h3 style="margin:12px 0 6px">Añadir mantenimiento / parada programada</h3>
+  <div class="grid">
+    <div class="field"><label>Día mantenimiento</label><select id="maintDay"></select></div>
+    <div class="field"><label>Hora inicio mantenimiento</label><input id="maintStartTime" type="time" value=""></div>
+    <div class="field"><label>Hora fin mantenimiento</label><input id="maintEndTime" type="time" value=""></div>
+    <div class="field"><label>Descripción</label><input id="maintDesc" type="text" value="Mantenimiento"></div>
+  </div>
+  <div class="buttons"><button id="btnAddMaintenance" class="danger">Añadir mantenimiento y replanificar</button><button id="btnClearMaintenance" class="light">Quitar mantenimientos</button></div>
+  <div id="maintenanceResult" class="muted">Entre las horas indicadas no se podrá secar. El programa intentará planificar antes y después.</div>
+  <div class="buttons"><button id="btnReplaceReplan" class="secondary">Sustituir orden y replanificar</button><button id="btnClearReplacements" class="light">Quitar sustituciones manuales</button></div>
+  <div id="replaceResult" class="muted">Primero calcula la previsión. Después selecciona una orden de secado de un día, cámbiala por otro producto/toneladas, indica si procede una hora mínima de inicio y recalcula.</div>
+</div>
+<div class="card"><div class="sectionHead"><h2>Producto húmedo disponible, origen y velocidad de secado</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
+  <div class="grid noPrint" style="margin-bottom:10px">
+    <div class="field"><label>Nuevo producto húmedo</label><input id="newWetProduct" type="text" placeholder="Ej.: RP090H"></div>
+    <div class="field"><label>Disponible inicial (t)</label><input id="newWetTons" type="number" step="1" value="0"></div>
+    <div class="field"><label>&nbsp;</label><button id="btnAddWetProduct" type="button" class="secondary">Añadir producto húmedo</button></div>
+    <div class="field"><label>Eliminar producto húmedo</label><select id="deleteWetProduct"></select></div>
+    <div class="field"><label>&nbsp;</label><button id="btnDeleteWetProduct" type="button" class="danger">Eliminar producto húmedo</button></div>
+  </div>
+  <div class="tableWrap"><table id="wetDryTable"></table></div><div class="small">Se incluye RP0208H como origen porque lo pediste como origen por defecto de RP0508S. Puedes añadir nuevos productos húmedos para que aparezcan como origen seleccionable.</div></div>
+<div class="card"><div class="sectionHead"><h2>Silos secos</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="siloTable"></table></div></div>
+<div class="card"><div class="sectionHead"><h2>Envasados disponibles</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
+  <p class="small">Importa Excel. Se añaden solo filas con <b>DISPONIBLE (t) &gt; 0</b>. Columnas leídas: PRODUCTO, PALETS/BB, DISPONIBLE (t), REF REAL y REF SAP.</p>
+  <div class="buttons"><button id="btnImportPackExcel" class="secondary">Importar envasados Excel</button><button id="btnClearPack" class="light">Borrar envasados</button><input id="packExcelFile" class="hidden" type="file" accept=".xlsx,.xls,.csv"></div>
+  <div class="tableWrap"><table id="packTable"></table></div><div id="packResult" class="muted">Sin envasados importados.</div>
+</div>
+<div class="card"><div class="sectionHead"><h2>Cargas previstas de la semana</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="demandTable"></table></div></div>
+<div class="card"><div class="sectionHead"><h2>Envasados pendientes por día</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="packPendingTable"></table></div><div class="small">Resumen de las referencias de envasado pendientes, situadas por día después de las cargas previstas de la semana.</div></div>
+<div class="card"><div class="sectionHead"><h2>Horas de vaciado por cambio de producto</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="changeTable"></table></div><div class="small">Producto inicial en la primera columna y producto final en la primera fila. Enter avanza a la siguiente columna.</div></div>
+<div class="card"><h2>Previsión calculada</h2><div id="planOutput" class="muted">Sin previsión calculada.</div></div>
+</div>
+<script>
+const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const wetProductsDefault=[['RP070FH',700,true],['RP070GH',700,true],['RP055MOLH',500,true],['RP055H',2000,true],['RP045H',500,true],['RP0104H',2500,true],['FV2000H',1200,true],['RP0308H',700,true],['RP0208H',0,true]];
+const wetProductsInitial=JSON.parse(JSON.stringify(wetProductsDefault));
+const dryProducts=['RP070FS','RP070GS','RP055MOLS','RP055MS','RP055S','RP045S','RP0104S','RP0508S','RP0816S','FV2000S','RP058S'];
+const dryDefaults={RP070FS:{origin:'RP070FH',rate:25},RP070GS:{origin:'RP070GH',rate:25},RP055MOLS:{origin:'RP055MOLH',rate:25},RP055MS:{origin:'RP055H',rate:25},RP055S:{origin:'RP055H',rate:25},RP045S:{origin:'RP045H',rate:25},RP0104S:{origin:'RP0104H',rate:25},RP0508S:{origin:'RP0208H',rate:25},RP0816S:{origin:'FV2000H',rate:25},FV2000S:{origin:'FV2000H',rate:25},RP058S:{origin:'RP055H',rate:25}};
+const siloDefaults=[['C1','RP0508S',200,0],['C2','RP0816S',200,0],['C3','RP055MS',200,0],['C4','RP055S',200,0],['C5','RP055S',200,0],['C6','RP070FS',200,0],['C7','RP045S',200,0],['C8','RP0104S',200,0],['C9','FV2000S',200,0],['C10','RP0104S',190,0],['C11','RP0508S',200,0],['C12','RP058S',190,0],['C13','RP055MOLS',190,0],['C14','RP070GS',190,0]];
+let lastPlan=null;
+let manualReplacements=[];
+let maintenanceWindows=[];
+let packagedItems=[];
+let sapPendingProducts=[];
+let sapPendingDateLabels=null;
+let jsonDirectoryHandle=null;
+const JSON_FILE_NAME='planificador_secado_cuarzo.json';
+let autoSaveTimer=null;
+let applyingState=false;
+function n(v){return Number(v)||0} function fmtT(v,d=0){return (Number(v)||0).toLocaleString('es-ES',{maximumFractionDigits:d,minimumFractionDigits:d})} function hm(h){let m=Math.round((h||0)*60);return `${Math.floor(m/60)} h ${m%60} min`} function clockFromWeekHour(h,hd){let total=Math.max(0,Math.round(((h||0)%hd)*60));return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`}
+function packId(x){return 'ENV|'+(x.refSap||'')+'|'+(x.refReal||'')+'|'+(x.producto||'')}
+function isPack(p){return String(p).startsWith('ENV|')}
+function packLabel(id){let x=packagedItems.find(a=>packId(a)===id);return x?`ENV ${x.producto||''} | ${x.refSap||''} | ${x.refReal||''}`:id}
+function allProducts(){const normal=Array.from(new Set(dryProducts.concat(sapPendingProducts||[]))).sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}));return normal.concat(packagedItems.map(packId))}
+function productLabel(p){return isPack(p)?packLabel(p):p}
+function normRef(v){return String(v||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9]/g,'')}
+function isSapBlockedProduct(p){let t=normRef(p);return t.includes('FC')||t.includes('FV016')}
+function isSapPackRef(p){let t=normRef(p);let hasPack=t.includes('SAC')||t.includes('SACO')||t.includes('BB')||t.includes('BIGBAG');let excluded=t.includes('FV016')||isSapBlockedProduct(p);return hasPack&&!excluded}
+function demandProducts(){const base=allProducts().filter(p=>!isPack(p)&&!isSapPackRef(p));wetProductsDefault.forEach(w=>{if(!base.includes(w[0]))base.push(w[0]);});return base}
+function packPendingProducts(){return allProducts().filter(p=>isPack(p)||isSapPackRef(p))}
+
+function allDemandTableProducts(){
+  const list=[];
+  demandProducts().forEach(p=>{if(!list.includes(p))list.push(p);});
+  packPendingProducts().forEach(p=>{if(!list.includes(p))list.push(p);});
+  return list;
+}
+function isWetProduct(p){return (wetProductsDefault||[]).some(w=>String(w[0]).toUpperCase()===String(p).toUpperCase())}
+
+function stockForPendingProduct(p){
+  if(isPack(p)) return stockByProduct(getState())[p]||0;
+  const target=normRef(p); let total=0;
+  (packagedItems||[]).forEach(x=>{
+    const vals=[x.producto,x.refSap,x.refReal].map(normRef);
+    if(vals.some(v=>v && (v===target || v.includes(target) || target.includes(v)))) total+=n(x.disponible);
+  });
+  return total;
+}
+function weeklyPackDemandTons(p){const sid=safeId(p);let total=0;DAYS.forEach((_,i)=>{total+=n(document.getElementById(`dem_${sid}_${i}`)?.value)});return total}
+function updatePackRowVisibility(){packPendingProducts().forEach(p=>{const sid=safeId(p), show=weeklyPackDemandTons(p)>0;let dr=document.getElementById('demandRow_'+sid);if(dr)dr.style.display=show?'':'none';});}
+function productOptions(sel){return dryProducts.map(p=>`<option value="${p}" ${p===sel?'selected':''}>${p}</option>`).join('')} function wetOptions(sel){return wetProductsDefault.map(w=>`<option value="${w[0]}" ${w[0]===sel?'selected':''}>${w[0]}</option>`).join('')} function siloOptions(sel){return siloDefaults.map(s=>`<option value="${s[0]}" ${s[0]===sel?'selected':''}>${s[0]} - ${document.getElementById('siloProd_'+s[0])?.value||s[1]}</option>`).join('')}
+function toggleCard(btn){btn.closest('.card').classList.toggle('collapsed')}
+function renderAll(){renderWetDry();renderDeleteWetSelector();renderSilos();renderPackaged();renderDemand();renderChange();renderDestinations();renderAdditionalOrder();renderCancelOrder();renderReplacementOrder();renderMaintenanceControls();attachGlobalEvents();refreshSiloGaps(false);refreshDemandTotals(false);renderPackPending();updateSummary(null);['extraTrucks','extraPackTons','extraDay'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',checkExtraAvailability);});updateJsonInfo()}
+
+function renderDeleteWetSelector(){
+  const sel=document.getElementById('deleteWetProduct');
+  if(!sel)return;
+  const names=[];
+  (wetProductsDefault||[]).forEach(w=>{if(w&&w[0]&&!names.includes(w[0]))names.push(w[0]);});
+  document.querySelectorAll('#wetDryTable tr').forEach((tr,idx)=>{
+    if(idx===0)return;
+    const txt=String(tr.cells?.[0]?.textContent||'').trim();
+    if(txt&&!names.includes(txt))names.push(txt);
+  });
+  sel.innerHTML=names.map(x=>`<option value="${x}">${x}</option>`).join('');
+}
+function deleteWetProduct(){
+  const sel=document.getElementById('deleteWetProduct');
+  if(!sel||!sel.value){alert('Selecciona un producto húmedo para eliminar.');return}
+  const wet=sel.value;
+  const usedBy=dryProducts.filter(p=>document.getElementById('origin_'+p)?.value===wet);
+  if(usedBy.length){
+    alert('No se puede eliminar '+wet+' porque está seleccionado como origen de: '+usedBy.join(', ')+'. Cambia primero el origen húmedo de esos productos.');
+    return;
+  }
+  const idx=wetProductsDefault.findIndex(w=>w[0]===wet);
+  if(idx>=0)wetProductsDefault.splice(idx,1);
+  renderWetDry();
+  renderDeleteWetSelector();
+  refreshDemandTotals(false);
+  scheduleAutoSave();
+}
+
+function renderWetDry(){let html='<tr><th>Producto húmedo</th><th>Sel.</th><th class="wetAvail">Disponible (t)</th><th class="spacerCol">Producto seco</th><th>Origen húmedo</th><th>Secado (t/h)</th></tr>';for(let i=0;i<Math.max(wetProductsDefault.length,dryProducts.length);i++){let w=wetProductsDefault[i],d=dryProducts[i];html+='<tr>';html+=w?`<td class="left">${w[0]}</td><td class="center"><input type="checkbox" id="wetSel_${w[0]}" ${w[2]?'checked':''}></td><td class="wetAvail center"><input class="wetAvailInput" data-row="${i}" type="number" step="1" id="wetT_${w[0]}" value="${w[1]}"></td>`:'<td></td><td></td><td class="wetAvail"></td>';html+=d?`<td class="left spacerCol">${d}</td><td class="center"><select id="origin_${d}">${wetOptions(dryDefaults[d].origin)}</select></td><td class="rateInput center"><input class="rateDryInput" data-row="${i}" type="number" step="0.1" id="rate_${d}" value="${dryDefaults[d].rate}"></td>`:'<td class="spacerCol"></td><td></td><td></td>';html+='</tr>'}document.getElementById('wetDryTable').innerHTML=html;document.querySelectorAll('.wetAvailInput').forEach(inp=>inp.addEventListener('keydown',enterDownSameColumn));document.querySelectorAll('.rateDryInput').forEach(inp=>inp.addEventListener('keydown',enterDownSameColumn));renderDeleteWetSelector()}
+
+function addWetProduct(){
+  const inp=document.getElementById('newWetProduct'), tonsInp=document.getElementById('newWetTons');
+  let name=String(inp?.value||'').trim().toUpperCase();
+  name=name.replace(/\s+/g,'');
+  if(!name){alert('Escribe el nombre del nuevo producto húmedo.');return;}
+  if(wetProductsDefault.some(w=>String(w[0]).toUpperCase()===name)){alert('Ese producto húmedo ya existe.');return;}
+  const prevWet={},prevSel={},prevDry={};
+  wetProductsDefault.forEach(w=>{prevWet[w[0]]=n(document.getElementById('wetT_'+w[0])?.value);prevSel[w[0]]=document.getElementById('wetSel_'+w[0])?.checked!==false;});
+  dryProducts.forEach(p=>{prevDry[p]={origin:document.getElementById('origin_'+p)?.value||dryDefaults[p].origin,rate:n(document.getElementById('rate_'+p)?.value)||dryDefaults[p].rate};});
+  wetProductsDefault.push([name,n(tonsInp?.value),true]);
+  renderWetDry();
+  renderDeleteWetSelector();
+  wetProductsDefault.forEach(w=>{if(prevWet[w[0]]!=null){document.getElementById('wetT_'+w[0]).value=prevWet[w[0]];document.getElementById('wetSel_'+w[0]).checked=prevSel[w[0]];}});
+  dryProducts.forEach(p=>{if(prevDry[p]){document.getElementById('origin_'+p).value=prevDry[p].origin;document.getElementById('rate_'+p).value=prevDry[p].rate;}});
+  refreshDemandTotals(false);
+  scheduleAutoSave();
+  if(inp)inp.value='';
+  if(tonsInp)tonsInp.value=0;
+}
+function renderSilos(){let html='<tr><th>Activo</th><th>Silo</th><th>Producto seco</th><th>Capacidad máx. (t)</th><th>Capacidad actual (t)</th><th>Hueco (t)</th><th>% hueco</th></tr>';siloDefaults.forEach((s,i)=>{html+=`<tr id="siloRow_${s[0]}"><td class="center"><input class="siloActiveInput" type="checkbox" id="siloAct_${s[0]}" checked></td><td class="left">Silo ${s[0]}</td><td><select id="siloProd_${s[0]}">${productOptions(s[1])}</select></td><td><input type="number" step="1" id="siloMax_${s[0]}" value="${s[2]}"></td><td><input class="siloCurInput" data-row="${i}" type="number" step="1" id="siloCur_${s[0]}" value="${s[3]}"></td><td id="siloGap_${s[0]}">0</td><td id="siloGapPct_${s[0]}">0%</td></tr>`});document.getElementById('siloTable').innerHTML=html;document.querySelectorAll('.siloCurInput').forEach(inp=>inp.addEventListener('keydown',enterDownSiloCur));document.querySelectorAll('.siloActiveInput').forEach(inp=>inp.addEventListener('change',()=>refreshSiloGaps()))}
+function safeId(p){return String(p).replace(/[^A-Za-z0-9_-]/g,'_')}
+function renderDemand(){
+  let prods=orderedProductsForDemand().filter(p=>!isPack(p)&&!isSapPackRef(p));
+  let headers=sapPendingDateLabels&&sapPendingDateLabels.length?sapPendingDateLabels:DAYS.map(d=>({label:d,sub:'camiones / t env.'}));
+  let html='<tr><th>Producto / referencia</th>'+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'camiones / t env.'}</span></th>`).join('')+'<th>Camiones semana</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
+  prods.forEach((p,r)=>{
+    const sid=safeId(p), step=isPack(p)?'0.01':'1', title=isPack(p)?'Toneladas de envasado pendientes':'Camiones pendientes';
+    const packHidden=isPack(p)?' style="display:none" class="packDemandRow"':'';
+    html+=`<tr id="demandRow_${sid}"${packHidden}><td class="left">${productLabel(p)}${isPack(p)?'<br><span class="small">Envasado: introducir toneladas</span>':''}</td>`+DAYS.map((_,i)=>`<td class="center"><input class="demandInput" title="${title}" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${step}" id="dem_${sid}_${i}" value="0"></td>`).join('')+`<td id="demTrucks_${sid}">0</td><td id="demTons_${sid}">0</td><td id="stock_${sid}">0</td><td id="def_${sid}">0</td></tr>`;
+  });
+  document.getElementById('demandTable').innerHTML=html;
+  document.querySelectorAll('.demandInput').forEach(inp=>inp.addEventListener('keydown',enterDemandNext));
+}
+
+
+function renderPackaged(){let tbl=document.getElementById('packTable');if(!tbl)return;let html='<tr><th>Producto</th><th>PALETS/BB</th><th>Disponible (t)</th><th>REF REAL</th><th>REF SAP</th></tr>';if(!packagedItems.length){html+='<tr><td colspan="5" class="muted">No hay envasados importados.</td></tr>'}else{packagedItems.forEach(x=>{html+=`<tr><td class="left">${x.producto||''}</td><td>${x.palets||''}</td><td>${fmtT(x.disponible,2)}</td><td>${x.refReal||''}</td><td>${x.refSap||''}</td></tr>`})}tbl.innerHTML=html;let r=document.getElementById('packResult');if(r)r.textContent=packagedItems.length?`${packagedItems.length} referencias de envasado disponibles importadas.`:'Sin envasados importados.'}
+function renderPackPending(){
+  const tbl=document.getElementById('packPendingTable'); if(!tbl)return;
+  const packs=packPendingProducts().sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}));
+  let headers=sapPendingDateLabels&&sapPendingDateLabels.length?sapPendingDateLabels:DAYS.map(d=>({label:d,sub:'cargas / t'}));
+  let html='<tr><th>Referencia envasado</th>'+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'cargas / t'}</span></th>`).join('')+'<th>Total cargas</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
+  let visible=0, truck=n(document.getElementById('truckT')?.value)||28;
+  packs.forEach((p,r)=>{
+    const sid=safeId(p); let total=0; let cells='';
+    DAYS.forEach((_,i)=>{const v=n(document.getElementById(`dem_${sid}_${i}`)?.value); total+=v; cells+=`<td class="center"><input class="demandInput packPendingInput" title="Pendiente envasado" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${isPack(p)?'0.01':'1'}" id="dem_${sid}_${i}" value="${v||0}"></td>`});
+    const tons=isPack(p)?total:total*truck;
+    const stock=stockForPendingProduct(p);
+    const deficit=Math.max(0,tons-stock);
+    if(total>0 || isSapPackRef(p)){
+      visible++;
+      html+=`<tr id="packPendingRow_${sid}"><td class="left">${productLabel(p)}</td>${cells}<td>${isPack(p)?'-':fmtT(total,0)}</td><td>${fmtT(tons,isPack(p)?2:0)}</td><td>${fmtT(stock,2)}</td><td>${fmtT(deficit,2)}</td></tr>`;
+    }
+  });
+  if(!packs.length||!visible){html+='<tr><td colspan="12" class="muted">No hay pedidos de envasado pendientes en la semana.</td></tr>'}
+  tbl.innerHTML=html;
+  tbl.querySelectorAll('.packPendingInput').forEach(inp=>{inp.addEventListener('keydown',enterDemandNext);inp.addEventListener('input',()=>{refreshDemandTotals(false);updateSummary(lastPlan);scheduleAutoSave();});});
+}
+function renderMaintenanceControls(){let el=document.getElementById('maintDay');if(el)el.innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
+
+function renderChange(){let html='<tr><th class="left">Inicial \\ Final</th>'+dryProducts.map(p=>`<th>${p}</th>`).join('')+'</tr>';dryProducts.forEach((from,ri)=>{html+=`<tr><th class="left">${from}</th>`+dryProducts.map((to,ci)=>`<td><input class="changeInput" data-r="${ri}" data-c="${ci}" id="chg_${from}_${to}" type="number" step="0.1" value="${from===to?0:1}"></td>`).join('')+'</tr>'});document.getElementById('changeTable').innerHTML=html;document.querySelectorAll('.changeInput').forEach(inp=>inp.addEventListener('keydown',enterNext))}
+function renderDestinations(){let d1=document.getElementById('dest0508to0104'),d2=document.getElementById('dest0816to0508');let v1=d1.value||'C8',v2=d2.value||'C13';d1.innerHTML=siloOptions(v1);d2.innerHTML=siloOptions(v2);d1.value=v1;d2.value=v2}
+
+function productSortGroup(p){
+  const txt=String(productLabel(p)||p||'').toUpperCase();
+  if(txt.includes('RP'))return 0;
+  if(txt.includes('FV'))return 1;
+  if(txt.includes('ARENA'))return 2;
+  if(txt.includes('ENV'))return 3;
+  return 4;
+}
+function orderedProductsForSelectors(){
+  return allProducts().slice().sort((a,b)=>{
+    const ga=productSortGroup(a), gb=productSortGroup(b);
+    if(ga!==gb)return ga-gb;
+    return String(productLabel(a)).localeCompare(String(productLabel(b)),'es',{numeric:true,sensitivity:'base'});
+  });
+}
+function availableStockForProduct(p){
+  const st=getState();
+  const stock=stockByProduct(st);
+  return n(stock[p]);
+}
+function checkExtraAvailability(){
+  const p=document.getElementById('extraProduct')?.value;
+  const day=Number(document.getElementById('extraDay')?.value)||0;
+  const truck=n(document.getElementById('truckT')?.value)||28;
+  const requested=isPack(p)?n(document.getElementById('extraPackTons')?.value):n(document.getElementById('extraTrucks')?.value)*truck;
+  const available=availableStockForProduct(p);
+  const remaining=available-requested;
+  const el=document.getElementById('extraResult');
+  if(!el)return;
+  const unit=isPack(p)?'t':'t';
+  if(requested<=0){
+    el.className='muted';
+    el.textContent='Indica una cantidad de pedido para comprobar disponibilidad.';
+    return;
+  }
+  if(remaining>=0){
+    el.className='notice ok';
+    el.innerHTML=`<b>Disponible.</b> ${productLabel(p)} tiene ${fmtT(available,isPack(p)?2:0)} ${unit}. Pedido solicitado: ${fmtT(requested,isPack(p)?2:0)} ${unit}. Quedan ${fmtT(remaining,isPack(p)?2:0)} ${unit}.`;
+  }else{
+    el.className='notice alert';
+    el.innerHTML=`<b>No disponible.</b> ${productLabel(p)} tiene ${fmtT(available,isPack(p)?2:0)} ${unit}. Pedido solicitado: ${fmtT(requested,isPack(p)?2:0)} ${unit}. Faltan ${fmtT(Math.abs(remaining),isPack(p)?2:0)} ${unit}.`;
+  }
+}
+
+function renderAdditionalOrder(){
+  const pSel=document.getElementById('extraProduct'), dSel=document.getElementById('extraDay');
+  if(pSel){ pSel.innerHTML=orderedProductsForSelectors().map(p=>`<option value="${p}">${productLabel(p)}</option>`).join(''); pSel.onchange=()=>{updateExtraMode();checkExtraAvailability();}; }
+  if(dSel) dSel.innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
+  updateExtraMode();
+}
+function updateExtraMode(){
+  const p=document.getElementById('extraProduct')?.value;
+  const lab=document.getElementById('extraQtyLabel');
+  const trucks=document.getElementById('extraTrucks');
+  const tons=document.getElementById('extraPackTons');
+  if(!lab||!trucks||!tons)return;
+  if(isPack(p)){lab.textContent='Camiones adicionales (no usado en envasado)';trucks.disabled=true;tons.disabled=false;}
+  else{lab.textContent='Camiones adicionales';trucks.disabled=false;tons.disabled=true;}
+}
+function renderCancelOrder(){
+  const pSel=document.getElementById('cancelProduct'), dSel=document.getElementById('cancelDay');
+  if(pSel) pSel.innerHTML=orderedProductsForSelectors().map(p=>`<option value="${p}">${productLabel(p)}</option>`).join('');
+  if(dSel) dSel.innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
+}
+function renderReplacementOrder(){
+  const dSel=document.getElementById('replaceDay'), oSel=document.getElementById('replaceOrder'), pSel=document.getElementById('replaceProduct');
+  if(dSel){dSel.innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('');dSel.onchange=refreshReplacementOrders;}
+  if(pSel) pSel.innerHTML=allProducts().map(p=>`<option value="${p}">${productLabel(p)}</option>`).join('');
+  refreshReplacementOrders();
+}
+function refreshReplacementOrders(){
+  const dSel=document.getElementById('replaceDay'), oSel=document.getElementById('replaceOrder'), pSel=document.getElementById('replaceProduct'), tons=document.getElementById('replaceTons');
+  if(!dSel||!oSel)return;
+  const day=Number(dSel.value)||0;
+  const orders=(lastPlan?.actions||[]).map((a,i)=>({...a,globalIndex:i})).filter(a=>a.type==='secado'&&a.day===day);
+  if(!orders.length){
+    oSel.innerHTML='<option value="">No hay órdenes de secado calculadas para este día</option>';
+    return;
+  }
+  oSel.innerHTML=orders.map((a,idx)=>`<option value="${a.globalIndex}" data-product="${a.product}" data-tons="${a.tons}" data-start="${hoursToTimeInput((a.start||0)-a.day*(n(document.getElementById('hoursDay').value)||24))}">${idx+1}. ${a.startText||''}-${a.endText||''} ${productLabel(a.product)} - ${fmtT(a.tons,1)} t (${hm(a.hours)})</option>`).join('');
+  oSel.onchange=()=>{
+    const opt=oSel.selectedOptions[0];
+    if(opt){if(pSel)pSel.value=opt.dataset.product||dryProducts[0]; if(tons)tons.value=Math.round(Number(opt.dataset.tons)||180); const stInp=document.getElementById('replaceStartTime'); if(stInp)stInp.value=opt.dataset.start||'';}
+  };
+  oSel.dispatchEvent(new Event('change'));
+}
+function attachGlobalEvents(){document.querySelectorAll('input,select').forEach(el=>{if(!['importFile','pendingCsvFile','packExcelFile'].includes(el.id))el.addEventListener('input',()=>{refreshSiloGaps(false);refreshDemandTotals(false);if(el.id&&el.id.startsWith('siloProd_'))renderDestinations();updateSummary(lastPlan);scheduleAutoSave()})});document.getElementById('btnCalc').onclick=()=>{calculatePlan();scheduleAutoSave()};document.getElementById('btnScenario').onclick=runMinLotScenarios;document.getElementById('btnExport').onclick=exportJSON;document.getElementById('btnImport').onclick=()=>document.getElementById('importFile').click();document.getElementById('btnDefault').onclick=()=>{restoreDefaults();scheduleAutoSave()};document.getElementById('btnClear').onclick=()=>{clearPlan();scheduleAutoSave()};document.getElementById('btnPrint').onclick=printResumenPrevision;document.getElementById('btnPrintTablesPdf').onclick=printCargasEnvasadosSilosPdf;document.getElementById('btnFolder').onclick=selectJsonFolder;document.getElementById('btnExtraReplan').onclick=addExtraDemandAndReplan;if(document.getElementById('btnCheckExtraAvailability'))document.getElementById('btnCheckExtraAvailability').onclick=checkExtraAvailability;document.getElementById('btnCancelReplan').onclick=cancelDemandAndReplan;document.getElementById('btnReplaceReplan').onclick=replacePlannedOrderAndReplan;document.getElementById('btnClearReplacements').onclick=clearManualReplacements;if(document.getElementById('btnAddWetProduct'))document.getElementById('btnAddWetProduct').onclick=addWetProduct;if(document.getElementById('btnDeleteWetProduct'))document.getElementById('btnDeleteWetProduct').onclick=deleteWetProduct;if(document.getElementById('btnAddMaintenance'))document.getElementById('btnAddMaintenance').onclick=addMaintenanceAndReplan;if(document.getElementById('btnClearMaintenance'))document.getElementById('btnClearMaintenance').onclick=clearMaintenance;document.getElementById('replaceDay').onchange=refreshReplacementOrders;document.getElementById('replaceOrder').onchange=()=>{const opt=document.getElementById('replaceOrder').selectedOptions[0];if(opt){document.getElementById('replaceProduct').value=opt.dataset.product||dryProducts[0];document.getElementById('replaceTons').value=Math.round(Number(opt.dataset.tons)||180);const stInp=document.getElementById('replaceStartTime');if(stInp)stInp.value=opt.dataset.start||''}};document.getElementById('importFile').onchange=importJSON;if(document.getElementById('btnImportPendingCsv'))document.getElementById('btnImportPendingCsv').onclick=()=>document.getElementById('pendingCsvFile').click();if(document.getElementById('pendingCsvFile'))document.getElementById('pendingCsvFile').onchange=e=>importSapPendingFile(e);
+const bpe=document.getElementById('btnImportPackExcel');if(bpe)bpe.onclick=()=>document.getElementById('packExcelFile').click();const pxf=document.getElementById('packExcelFile');if(pxf)pxf.onchange=importPackagedExcel;const bcp=document.getElementById('btnClearPack');if(bcp)bcp.onclick=()=>{packagedItems=[];renderPackaged();renderDemand();renderAdditionalOrder();renderCancelOrder();refreshDemandTotals(false);renderPackPending();calculatePlan();scheduleAutoSave()};['extraTrucks','extraPackTons','extraDay'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',checkExtraAvailability);});updateJsonInfo()}
+function enterNext(e){if(e.key!=='Enter')return;e.preventDefault();let r=n(e.target.dataset.r),c=n(e.target.dataset.c)+1;if(c>=dryProducts.length){c=0;r=(r+1)%dryProducts.length}let next=document.querySelector(`.changeInput[data-r="${r}"][data-c="${c}"]`);if(next){next.focus();next.select()}}
+function enterDownSameColumn(e){if(e.key!=='Enter')return;e.preventDefault();let r=n(e.target.dataset.row)+1,cls=e.target.classList.contains('wetAvailInput')?'wetAvailInput':'rateDryInput';let max=document.querySelectorAll('.'+cls).length;if(r>=max)r=0;let next=document.querySelector(`.${cls}[data-row="${r}"]`);if(next){next.focus();next.select()}}
+function enterDownSiloCur(e){if(e.key!=='Enter')return;e.preventDefault();let r=n(e.target.dataset.row)+1,max=document.querySelectorAll('.siloCurInput').length;if(r>=max)r=0;let next=document.querySelector(`.siloCurInput[data-row="${r}"]`);if(next){next.focus();next.select()}}
+function enterDemandNext(e){if(e.key!=='Enter')return;e.preventDefault();let r=n(e.target.dataset.r),c=n(e.target.dataset.c)+1;if(c>=DAYS.length){c=0;r=(r+1)%allProducts().length}let next=document.querySelector(`.demandInput[data-r="${r}"][data-c="${c}"]`);if(next){next.focus();next.select()}}
+
+function tableHtmlForPrint(tableId){
+  const table=document.getElementById(tableId);
+  if(!table)return '<div class="muted">Tabla no encontrada.</div>';
+  const clone=table.cloneNode(true);
+  clone.querySelectorAll('input').forEach(inp=>{
+    const span=document.createElement('span');
+    span.textContent=inp.value||'';
+    inp.parentNode.replaceChild(span,inp);
+  });
+  clone.querySelectorAll('select').forEach(sel=>{
+    const span=document.createElement('span');
+    span.textContent=sel.options[sel.selectedIndex]?.textContent||sel.value||'';
+    sel.parentNode.replaceChild(span,sel);
+  });
+  clone.querySelectorAll('tr').forEach(tr=>{
+    const style=window.getComputedStyle(tr);
+    if(style.display==='none')tr.remove();
+  });
+  return '<table>'+clone.innerHTML+'</table>';
+}
+function printCargasEnvasadosSilosPdf(){
+  refreshSiloGaps(false);
+  refreshDemandTotals(false);
+  renderPackPending();
+  const cargas=tableHtmlForPrint('demandTable');
+  const envasados=tableHtmlForPrint('packPendingTable');
+  const silos=tableHtmlForPrint('siloTable');
+  const w=window.open('', '_blank');
+  if(!w){alert('El navegador ha bloqueado la ventana de impresión. Permite ventanas emergentes para este archivo.');return}
+  w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Cargas, envasados y silos</title><style>
+  body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;margin:14px;color:#172033}
+  h1{font-size:18pt;margin:0 0 12px}
+  h2{font-size:14pt;margin:16px 0 8px;break-after:avoid}
+  table{border-collapse:collapse;width:100%;font-size:8.5pt;margin-bottom:12px}
+  th,td{border:1px solid #d9e2ef;padding:4px;text-align:center;vertical-align:middle}
+  th{background:#eaf1fb}
+  .left{text-align:left}
+  .small{font-size:8pt;color:#5d6b82}
+  .section{break-inside:auto;page-break-inside:auto}
+  @page{size:A4 landscape;margin:8mm}
+  </style></head><body>
+  <h1>Planificador de secado - Cargas, envasados y silos</h1>
+  <div class="section"><h2>Cargas previstas de la semana</h2>${cargas}</div>
+  <div class="section"><h2>Envasados pendientes por día</h2>${envasados}</div>
+  <div class="section"><h2>Silos secos</h2>${silos}</div>
+  </body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=>w.print(),250);
+}
+
+function printResumenPrevision(){let resumen=document.getElementById('generalSummary').outerHTML;let plan=document.getElementById('planOutput').innerHTML;let w=window.open('', '_blank');if(!w){alert('El navegador ha bloqueado la ventana de impresión. Permite ventanas emergentes para este archivo.');return}w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Resumen y previsión de secado</title><style>body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;margin:18px;color:#172033}h1{font-size:18pt}h2{font-size:14pt;margin-top:18px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{border:1px solid #c8d8f6;border-radius:8px;padding:8px}.kpi b{display:block;font-size:9pt;color:#5d6b82}.kpi span{font-weight:700;font-size:13pt}.tableWrap{overflow:visible;margin:8px 0}table{border-collapse:collapse;width:100%;font-size:9pt}th,td{border:1px solid #d9e2ef;padding:4px;text-align:center}th{background:#eaf1fb}.left{text-align:left}.notice{border:1px solid #fed7aa;background:#fff7ed;border-radius:8px;padding:8px}.notice.alert{border-color:#ef4444;background:#fee2e2;color:#7f1d1d}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.resultDay{break-inside:avoid;margin-top:12px;border-left:4px solid #2563eb;padding-left:8px}.finalStateTable,.wetFinalTable{table-layout:fixed;min-width:0}.finalStateTable .colSilo{width:38px}.finalStateTable .colProduct{width:65px}.finalStateTable .colTons,.finalStateTable .colGap{width:48px}.wetFinalTable .colWetProduct{width:85px}.wetFinalTable .colWetTons{width:60px}@page{size:A4 landscape;margin:10mm}</style></head><body><h1>Planificador de secado - resumen y previsión</h1><h2>Resumen general</h2>${resumen}<h2>Previsión calculada</h2>${plan}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250)}
+
+
+function getState(){let truck=n(truckT.value),hd=n(hoursDay.value),min=n(minLot.value),max=n(maxLot.value);let wet={},wetEnabled={};wetProductsDefault.forEach(w=>{wet[w[0]]=n(document.getElementById('wetT_'+w[0]).value);wetEnabled[w[0]]=document.getElementById('wetSel_'+w[0]).checked});let dry={};dryProducts.forEach(p=>dry[p]={origin:document.getElementById('origin_'+p).value,rate:n(document.getElementById('rate_'+p).value)||1});let silos=siloDefaults.map(s=>({id:s[0],active:document.getElementById('siloAct_'+s[0])?.checked!==false,product:document.getElementById('siloProd_'+s[0]).value,max:n(document.getElementById('siloMax_'+s[0]).value),cur:n(document.getElementById('siloCur_'+s[0]).value)}));let demand={};allDemandTableProducts().forEach(p=>{const sid=safeId(p);demand[p]=DAYS.map((_,i)=>{const v=n(document.getElementById(`dem_${sid}_${i}`)?.value);return isPack(p)?v:v*truck})});let chg={};dryProducts.forEach(f=>{chg[f]={};dryProducts.forEach(t=>chg[f][t]=n(document.getElementById(`chg_${f}_${t}`).value))});return{packagedItems,truck,hd,min,max,wet,wetEnabled,dry,silos,demand,chg,pct0508:n(pct0508to0104.value)/100,dest0508:dest0508to0104.value,pct0816:n(pct0816to0508.value)/100,dest0816:dest0816to0508.value,maintenance:maintenanceWindows}}
+function stockByProduct(st){let o={};allProducts().forEach(p=>o[p]=0);(wetProductsDefault||[]).forEach(w=>{if(o[w[0]]==null)o[w[0]]=0;o[w[0]]=n(st.wet?.[w[0]]);});st.silos.forEach(s=>{if(s.active!==false&&o[s.product]!=null)o[s.product]+=s.cur});(st.packagedItems||packagedItems||[]).forEach(x=>{o[packId(x)]=n(x.disponible)});return o}
+function refreshSiloGaps(){siloDefaults.forEach(s=>{let id=s[0],active=document.getElementById('siloAct_'+id)?.checked!==false,max=n(document.getElementById('siloMax_'+id)?.value),cur=n(document.getElementById('siloCur_'+id)?.value),gap=active?Math.max(0,max-cur):0,pct=(active&&max>0)?gap/max*100:0;let row=document.getElementById('siloRow_'+id);if(row)row.classList.toggle('inactiveSilo',!active);let g=document.getElementById('siloGap_'+id);if(g){g.textContent=active?fmtT(gap,0):'No activo';document.getElementById('siloGapPct_'+id).textContent=active?fmtT(pct,1)+'%':'-'}})}
+function refreshDemandTotals(){let st=getState(),stock=stockByProduct(st),truck=st.truck;allDemandTableProducts().forEach(p=>{const sid=safeId(p);let raw=0;DAYS.forEach((_,i)=>raw+=n(document.getElementById(`dem_${sid}_${i}`)?.value));let tons=isPack(p)?raw:raw*truck;let a=document.getElementById('demTrucks_'+sid),b=document.getElementById('demTons_'+sid),c=document.getElementById('stock_'+sid),d=document.getElementById('def_'+sid);let stk=(isSapPackRef(p)&&!isPack(p))?stockForPendingProduct(p):(stock[p]||0);if(a)a.textContent=isPack(p)?'-':fmtT(raw,0);if(b)b.textContent=fmtT(tons,isPack(p)?2:0);if(c)c.textContent=fmtT(stk,isPack(p)?2:0);if(d)d.textContent=fmtT(Math.max(0,tons-stk),isPack(p)?2:0);let row=document.getElementById('demandRow_'+sid);if(row&&(isPack(p)||isSapPackRef(p)))row.style.display='none';});renderPackPending();updatePackRowVisibility()}
+function parseTimeInputToHours(v){if(!v)return null;let parts=String(v).split(':');let h=Number(parts[0]||0),m=Number(parts[1]||0);if(!isFinite(h)||!isFinite(m))return null;return Math.max(0,h+m/60)}
+function hoursToTimeInput(h){if(h==null||!isFinite(h))return '';let hh=Math.floor(h)%24,mm=Math.round((h-Math.floor(h))*60);if(mm>=60){hh=(hh+1)%24;mm=0}return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')}
+function updateSummary(plan){let st=getState(),activeSilos=st.silos.filter(s=>s.active!==false),cap=activeSilos.reduce((a,s)=>a+s.max,0),cur=activeSilos.reduce((a,s)=>a+s.cur,0),gap=cap-cur,weekly=0;allProducts().forEach(p=>weekly+=(st.demand[p]||[]).reduce((a,b)=>a+b,0));let planned=plan?plan.totalDry:0,dryH=plan?plan.dryHours:0,emptyH=plan?plan.emptyHours:0,avg=dryH>0?planned/dryH:0,status=plan?plan.status:'Sin calcular',cls=status==='OK'?'ok':(status==='Sin calcular'?'warn':'bad');document.getElementById('generalSummary').innerHTML=`<div class="kpi"><b>Capacidad total</b><span>${fmtT(cap,0)} t</span></div><div class="kpi"><b>Stock actual</b><span>${fmtT(cur,0)} t</span></div><div class="kpi"><b>Hueco total</b><span>${fmtT(gap,0)} t</span></div><div class="kpi"><b>Cargas semanal</b><span>${fmtT(weekly,0)} t</span></div><div class="kpi"><b>Secado planificado</b><span>${fmtT(planned,1)} t</span></div><div class="kpi"><b>Media secado (t/h)</b><span>${fmtT(avg,1)}</span></div><div class="kpi"><b>Horas y minutos secando</b><span>${hm(dryH)}</span></div><div class="kpi"><b>Horas y minutos vaciado</b><span>${hm(emptyH)}</span></div><div class="kpi"><b>Estado</b><span class="pill ${cls}">${status}</span></div>`}
+function addToSilo(st,product,tons,preferred){let remaining=tons;let silos=st.silos.filter(s=>s.active!==false&&s.product===product);if(preferred)silos.sort((a,b)=>(a.id===preferred?-1:b.id===preferred?1:0));for(const s of silos){let add=Math.min(remaining,Math.max(0,s.max-s.cur));s.cur+=add;remaining-=add;if(remaining<=0)break}return tons-remaining}
+function removeFromSilo(st,product,tons){let rem=tons;for(const s of st.silos.filter(s=>s.active!==false&&s.product===product)){let take=Math.min(rem,s.cur);s.cur-=take;rem-=take;if(rem<=0)break}return tons-rem}
+function removeFromPackaged(st,product,tons){let rem=tons;let arr=st.packagedItems||packagedItems;const target=normRef(product);for(const x of arr){let match=packId(x)===product;if(!match&&!isPack(product)){const vals=[x.producto,x.refSap,x.refReal].map(normRef);match=vals.some(v=>v&&(v===target||v.includes(target)||target.includes(v)));}if(match){let take=Math.min(rem,n(x.disponible));x.disponible=n(x.disponible)-take;rem-=take;if(rem<=0)break}}return tons-rem}
+function productGap(st,product){return st.silos.filter(s=>s.active!==false&&s.product===product).reduce((a,s)=>a+Math.max(0,s.max-s.cur),0)}
+function canDry(st,product,qty){let o=st.dry[product].origin;if(!st.wetEnabled[o]||st.wet[o]<=0)return 0;let gap=productGap(st,product),possible=Math.min(qty,st.wet[o],gap);if(product==='RP0508S'&&st.pct0508>0)possible=Math.min(possible,productGap(st,'RP0104S')/st.pct0508);if(product==='RP0816S'&&st.pct0816>0)possible=Math.min(possible,productGap(st,'RP0508S')/st.pct0816);return Math.max(0,possible)}
+function maxQtyWithinTime(st,product,plan,limit){let change=(plan.lastProduct&&plan.lastProduct!==product)?(st.chg[plan.lastProduct]?.[product]||0):0;let available=limit-plan.time-change;if(available<=0)return 0;return available*(st.dry[product].rate||1)}
+function maintenanceBlocksForDay(st,day){return (st.maintenance||[]).filter(m=>Number(m.day)===day).map(m=>({day:Number(m.day),start:Number(m.start),end:Number(m.end),desc:m.desc||'Mantenimiento'})).filter(m=>isFinite(m.start)&&isFinite(m.end)&&m.end>m.start).sort((a,b)=>a.start-b.start)}
+function absoluteMaint(m,st){return {start:m.day*st.hd+Math.min(Math.max(m.start,0),st.hd),end:m.day*st.hd+Math.min(Math.max(m.end,0),st.hd),desc:m.desc}}
+function nextMaintenanceStart(st,plan,day,limit){let best=limit;for(const m of maintenanceBlocksForDay(st,day)){let a=absoluteMaint(m,st);if(a.start>plan.time+0.0001&&a.start<best)best=a.start;if(plan.time>=a.start-0.0001&&plan.time<a.end-0.0001)best=Math.min(best,plan.time)}return best}
+function applyMaintenanceIfCurrent(st,plan,day){let done=false;for(const m of maintenanceBlocksForDay(st,day)){let a=absoluteMaint(m,st);if(plan.time>=a.start-0.0001&&plan.time<a.end-0.0001){let start=plan.time;plan.time=a.end;plan.emptyHours+=a.end-start;plan.actions.push({day,type:'mantenimiento',hours:a.end-start,start,end:a.end,startText:clockFromWeekHour(start,st.hd),endText:clockFromWeekHour(a.end,st.hd),detail:m.desc||'Mantenimiento / parada programada'});done=true;}}return done}
+function processMaintenanceUntilEnd(st,plan,day,dayEnd){for(const m of maintenanceBlocksForDay(st,day)){let a=absoluteMaint(m,st);if(a.end<=plan.time||a.start>=dayEnd)continue;if(plan.time<a.start)plan.time=a.start;applyMaintenanceIfCurrent(st,plan,day)}}
+function effectiveLimit(st,plan,day,limit){applyMaintenanceIfCurrent(st,plan,day);return Math.min(limit,nextMaintenanceStart(st,plan,day,limit));}
+function dryBatch(st,product,qty,day,reason,plan,limit){limit=limit==null?null:effectiveLimit(st,plan,day,limit);let originalQty=qty,timeCap=limit==null?Infinity:maxQtyWithinTime(st,product,plan,limit);qty=Math.min(qty,timeCap);if(originalQty>=st.min&&qty<st.min)return false;qty=canDry(st,product,qty);if(qty<=0)return false;if(plan.lastProduct&&plan.lastProduct!==product){let e=st.chg[plan.lastProduct]?.[product]||0;if(limit!=null&&plan.time+e>limit)return false;let start=plan.time;plan.time+=e;plan.emptyHours+=e;plan.actions.push({day,type:'vaciado',from:plan.lastProduct,to:product,hours:e,start,end:plan.time,startText:clockFromWeekHour(start,st.hd),endText:clockFromWeekHour(plan.time,st.hd)})}let hours=qty/(st.dry[product].rate||1);if(limit!=null&&plan.time+hours>limit+0.0001)return false;let start=plan.time;plan.time+=hours;plan.dryHours+=hours;plan.totalDry+=qty;plan.lastProduct=product;st.wet[st.dry[product].origin]-=qty;addToSilo(st,product,qty);let by=[];if(product==='RP0508S'&&st.pct0508>0){let b=qty*st.pct0508,added=addToSilo(st,'RP0104S',b,st.dest0508);by.push(`+${fmtT(added,1)} t RP0104S a ${st.dest0508}`)}if(product==='RP0816S'&&st.pct0816>0){let b=qty*st.pct0816,added=addToSilo(st,'RP0508S',b,st.dest0816);by.push(`+${fmtT(added,1)} t RP0508S a ${st.dest0816}`)}plan.actions.push({day,type:'secado',product,tons:qty,hours,reason,origin:st.dry[product].origin,by:by.join(', '),start,end:plan.time,startText:clockFromWeekHour(start,st.hd),endText:clockFromWeekHour(plan.time,st.hd)});return true}
+
+function fillAvailableWindow(st,plan,day,limit,manualSuppress,label){
+  let guard=0;
+  while(plan.time<limit && guard++<500){
+    let currentCandidates=dryProducts.map(p=>{
+      let stock=stockByProduct(st)[p];
+      let need=st.demand[p][day]||0;
+      return {p,deficit:Math.max(0,need-stock),can:canDry(st,p,st.max)};
+    }).filter(x=>x.deficit>0 && x.can>=st.min && !(manualSuppress&&manualSuppress[x.p]))
+      .sort((a,b)=>b.deficit-a.deficit);
+    let candidates=currentCandidates;
+    let reason='Cubrir servicio del día antes de orden manual';
+    if(!candidates.length && day<6){
+      candidates=dryProducts.map(p=>{
+        let stock=stockByProduct(st)[p];
+        let need=st.demand[p][day+1]||0;
+        return {p,deficit:Math.max(0,need-stock),can:canDry(st,p,st.max)};
+      }).filter(x=>x.deficit>0 && x.can>=st.min && !(manualSuppress&&manualSuppress[x.p]))
+        .sort((a,b)=>b.deficit-a.deficit);
+      reason=`Anticipar servicio de ${DAYS[day+1]} antes de orden manual`;
+    }
+    if(!candidates.length){
+      candidates=dryProducts.map(p=>{
+        let tomorrow=(day<6?st.demand[p][day+1]:0),future=0;
+        for(let d=day+1;d<7;d++)future+=st.demand[p][d];
+        return {p,score:tomorrow*10+future+productGap(st,p)*0.25,can:canDry(st,p,st.max)};
+      }).filter(x=>x.can>=st.min && !(manualSuppress&&manualSuppress[x.p]))
+        .sort((a,b)=>b.score-a.score);
+      reason='Relleno de silos en hueco libre antes de orden manual';
+    }
+    if(!candidates.length)break;
+    let c=candidates[0];
+    let remainingQty=(limit-plan.time)*(st.dry[c.p].rate||1);
+    let target=Math.min(st.max,c.can,Math.max(st.min,c.deficit||remainingQty));
+    let qty=Math.min(target,remainingQty);
+    if(qty<st.min)break;
+    if(!dryBatch(st,c.p,qty,day,`${reason}${label?': '+label:''}`,plan,limit))break;
+  }
+}
+
+function buildPlanFromState(st){
+  let plan={actions:[],snapshots:[],lastProduct:null,time:0,dryHours:0,emptyHours:0,totalDry:0,status:'OK',warnings:[],lowWet:[],shortages:[]};
+  let warnings=[];
+  for(let day=0;day<7;day++){
+    if(plan.time<day*st.hd)plan.time=day*st.hd;
+    const reps=(manualReplacements||[]).filter(r=>r.day===day);
+    const manualSuppress={};
+    reps.forEach(r=>{if(r.originalProduct)manualSuppress[r.originalProduct]=(manualSuppress[r.originalProduct]||0)+(n(r.originalTons)||0)});
+    for(const r of reps){
+      const limit=(day+1)*st.hd;
+      const qty=Math.min(n(r.tons), st.max>0?Math.max(n(r.tons),0):n(r.tons));
+      if(qty>0){
+        const startHour=(r.startHour==null?null:Number(r.startHour));
+        if(startHour!=null && isFinite(startHour)){
+          const minStart=day*st.hd+Math.min(Math.max(startHour,0),st.hd);
+          if(plan.time<minStart){
+            fillAvailableWindow(st,plan,day,minStart,manualSuppress,`antes de ${r.product} a las ${hoursToTimeInput(Number(startHour))}`);
+            if(plan.time<minStart){
+              const waitStart=plan.time;
+              plan.time=minStart;
+              plan.actions.push({day,type:'espera',hours:plan.time-waitStart,start:waitStart,end:plan.time,startText:clockFromWeekHour(waitStart,st.hd),endText:clockFromWeekHour(plan.time,st.hd),detail:`Espera hasta hora mínima de inicio para ${r.product}`});
+            }
+          }
+        }
+        const ok=dryBatch(st,r.product,qty,day,`Sustitución manual de orden planificada${r.originalText?': '+r.originalText:''}${r.startHour!=null?' desde '+hoursToTimeInput(Number(r.startHour)):''}`,plan,limit);
+        if(!ok)warnings.push(`${DAYS[day]}: no se pudo aplicar la sustitución manual a ${r.product} (${fmtT(qty,0)} t) por falta de tiempo, hueco, húmedo o lote mínimo.`);
+      }
+    }
+    for(const p of dryProducts){
+      if(manualSuppress[p]>0)continue;
+      let need=st.demand[p][day],stock=stockByProduct(st)[p];
+      if(stock<need){
+        let deficit=need-stock;
+        let qty=Math.min(st.max,Math.max(st.min,deficit));
+        qty=Math.min(qty,canDry(st,p,qty));
+        if(qty<Math.min(st.min,deficit))warnings.push(`${DAYS[day]}: no hay hueco o húmedo suficiente para lote mínimo de ${p}.`);
+        if(qty>0)dryBatch(st,p,qty,day,`Cubrir servicio del día: faltaban ${fmtT(deficit,0)} t`,plan,(day+1)*st.hd);
+      }
+    }
+    for(const p of dryProducts){
+      let served=removeFromSilo(st,p,st.demand[p][day]);
+      if(served<st.demand[p][day]){
+        let short=st.demand[p][day]-served;
+        warnings.push(`${DAYS[day]}: déficit después de secar en ${p}: ${fmtT(short,0)} t.`);
+        plan.shortages.push({day,product:p,short});
+      }
+    }
+    for(const w of wetProductsDefault){
+      const p=w[0];
+      let need=st.demand[p]?.[day]||0;
+      if(need>0){
+        let available=n(st.wet[p]);
+        let served=Math.min(available,need);
+        st.wet[p]=available-served;
+        plan.actions.push({day,type:'carga húmedo',product:p,tons:served,hours:0,start:plan.time,end:plan.time,startText:clockFromWeekHour(plan.time,st.hd),endText:clockFromWeekHour(plan.time,st.hd),detail:`Carga prevista de producto húmedo: ${fmtT(served,0)} t descontadas de disponible.`});
+        if(served<need){
+          let short=need-served;
+          warnings.push(`${DAYS[day]}: déficit en producto húmedo ${p}: ${fmtT(short,0)} t.`);
+          plan.shortages.push({day,product:p,short});
+        }
+      }
+    }
+    for(const p of allProducts().filter(x=>isPack(x)||isSapPackRef(x))){
+      let need=st.demand[p]?.[day]||0;
+      if(need>0){
+        let served=removeFromPackaged(st,p,need);
+        if(served<need){
+          let short=need-served;
+          warnings.push(`${DAYS[day]}: déficit en envasado ${productLabel(p)}: ${fmtT(short,0)} t.`);
+          plan.shortages.push({day,product:p,short});
+        }
+      }
+    }
+    let dayEnd=(day+1)*st.hd,guard=0;
+    if(day<6){
+      let nextGuard=0;
+      while(plan.time<dayEnd&&nextGuard++<200){
+        let nextCandidates=dryProducts.map(p=>({p,need:st.demand[p][day+1],stock:stockByProduct(st)[p]}))
+          .map(x=>({...x,deficit:Math.max(0,x.need-x.stock),can:canDry(st,x.p,st.max)}))
+          .filter(x=>x.deficit>0&&x.can>=st.min&&!manualSuppress[x.p])
+          .sort((a,b)=>b.deficit-a.deficit);
+        if(!nextCandidates.length)break;
+        let c=nextCandidates[0],remainingDay=(dayEnd-plan.time)*(st.dry[c.p].rate||1);
+        let target=Math.min(st.max,Math.max(st.min,c.deficit));
+        let qty=Math.min(target,c.can,remainingDay);
+        if(qty<st.min)break;
+        dryBatch(st,c.p,qty,day,`Anticipar servicio de ${DAYS[day+1]}: faltan ${fmtT(c.deficit,0)} t`,plan,dayEnd);
+      }
+    }
+    while(plan.time<dayEnd&&guard++<500){
+      let candidates=dryProducts.map(p=>{let tomorrow=(day<6?st.demand[p][day+1]:0),future=0;for(let d=day+1;d<7;d++)future+=st.demand[p][d];return{p,score:tomorrow*10+future+productGap(st,p)*0.25,can:canDry(st,p,st.max)}}).filter(x=>x.can>=st.min&&!manualSuppress[x.p]).sort((a,b)=>b.score-a.score);
+      if(!candidates.length)break;
+      let c=candidates[0],remainingDay=(dayEnd-plan.time)*(st.dry[c.p].rate||1);
+      let qty=Math.min(st.max,c.can,Math.max(st.min,remainingDay));
+      if(qty<st.min)break;
+      dryBatch(st,c.p,qty,day,'Relleno de silos / reducir paradas después de cubrir el día siguiente',plan,dayEnd);
+    }
+    processMaintenanceUntilEnd(st,plan,day,dayEnd);
+    let postGuard=0;
+    while(plan.time<dayEnd&&postGuard++<200){
+      applyMaintenanceIfCurrent(st,plan,day);
+      let lim=effectiveLimit(st,plan,day,dayEnd);
+      if(lim<=plan.time+0.0001){processMaintenanceUntilEnd(st,plan,day,dayEnd);continue;}
+      let candidates=dryProducts.map(p=>{let tomorrow=(day<6?st.demand[p][day+1]:0),future=0;for(let d=day+1;d<7;d++)future+=st.demand[p][d];return{p,score:tomorrow*10+future+productGap(st,p)*0.25,can:canDry(st,p,st.max)}}).filter(x=>x.can>=st.min&&!manualSuppress[x.p]).sort((a,b)=>b.score-a.score);
+      if(!candidates.length)break;
+      let c=candidates[0],remaining=(lim-plan.time)*(st.dry[c.p].rate||1);
+      let qty=Math.min(st.max,c.can,Math.max(st.min,remaining));
+      if(qty<st.min)break;
+      if(!dryBatch(st,c.p,qty,day,'Relleno de silos después de mantenimiento / parada programada',plan,lim))break;
+    }
+    plan.snapshots.push({day,silos:JSON.parse(JSON.stringify(st.silos)),wet:JSON.parse(JSON.stringify(st.wet))});
+  }
+  if(plan.time>st.hd*7+0.01){plan.time=st.hd*7;warnings.push(`La planificación se ha limitado a las horas disponibles: ${hm(st.hd*7)}. No se programan más horas que las disponibles.`);}
+  let lowWet=[];
+  dryProducts.forEach(p=>{let o=st.dry[p].origin;if(st.wetEnabled[o]&&st.wet[o]<2*st.min)lowWet.push(`${o} para ${p}: ${fmtT(st.wet[o],0)} t`)});
+  plan.warnings=[...new Set(warnings)];
+  plan.lowWet=[...new Set(lowWet)];
+  plan.status=plan.warnings.length?'Con avisos':'OK';
+  return plan;
+}
+function calculatePlan(){
+  let st=getState();
+  let plan=buildPlanFromState(st);
+  lastPlan=plan;
+  renderPlan(plan);
+  updateSummary(plan);
+  refreshDemandTotals();
+}
+function cloneState(st){return JSON.parse(JSON.stringify(st));}
+function firstFeasibleDayForExtra(baseState, product, startDay, extraTons){
+  for(let d=startDay;d<7;d++){
+    let st=cloneState(baseState);
+    st.demand[product][d]+=extraTons;
+    let p=buildPlanFromState(st);
+    let bad=p.shortages.some(x=>x.product===product && x.day===d && x.short>0.01);
+    if(!bad)return {day:d,plan:p};
+  }
+  return null;
+}
+function addExtraDemandAndReplan(){
+  const product=document.getElementById('extraProduct').value;
+  const day=Number(document.getElementById('extraDay').value)||0;
+  const trucks=n(document.getElementById('extraTrucks').value);
+  const packTons=n(document.getElementById('extraPackTons').value);
+  const out=document.getElementById('extraResult');
+  if(!product){out.innerHTML='<div class="notice alert"><b>Aviso:</b> introduce un producto.</div>';return;}
+  const truck=n(document.getElementById('truckT').value)||28;
+  const sid=safeId(product);
+  const input=document.getElementById(`dem_${sid}_${day}`);
+  const previous=n(input.value);
+  const isEnv=isPack(product);
+  const qtyInput=isEnv?packTons:trucks;
+  if(qtyInput<=0){out.innerHTML='<div class="notice alert"><b>Aviso:</b> introduce una cantidad mayor que cero.</div>';return;}
+  const baseState=getState();
+  input.value=previous+qtyInput;
+  calculatePlan();
+  const extraTons=isEnv?qtyInput:trucks*truck;
+  const shortageToday=lastPlan.shortages.some(x=>x.product===product && x.day===day && x.short>0.01);
+  let html='';
+  if(!shortageToday){
+    html=`<div class="notice ok"><b>Pedido adicional incorporado y replanificado.</b><br>Se añaden ${isEnv?fmtT(extraTons,2)+' t de envasado':fmtT(trucks,0)+' camión(es), '+fmtT(extraTons,0)+' t'} de ${productLabel(product)} para ${DAYS[day]}. Según la previsión calculada, se puede servir ese mismo día.</div>`;
+  }else{
+    const feasible=firstFeasibleDayForExtra(baseState,product,day+1,extraTons);
+    if(feasible){
+      html=`<div class="notice"><b>Pedido adicional incorporado y replanificado.</b><br>No se puede garantizar completo para ${DAYS[day]} con las condiciones actuales. La primera fecha viable estimada para ${isEnv?fmtT(extraTons,2)+' t de envasado':fmtT(trucks,0)+' camión(es)'} de ${productLabel(product)} sería ${DAYS[feasible.day]}.</div>`;
+    }else{
+      html=`<div class="notice"><b>Pedido adicional incorporado y replanificado.</b><br>No se puede garantizar completo ni para ${DAYS[day]} ni para los días siguientes de la semana con el stock, hueco, húmedo y horas disponibles actuales.</div>`;
+    }
+  }
+  html+=`<div class="small">La tabla de cargas previstas queda modificada: ${productLabel(product)} en ${DAYS[day]} pasa de ${fmtT(previous,isEnv?2:0)} a ${fmtT(previous+qtyInput,isEnv?2:0)} ${isEnv?'t':'camión(es)'}. Para deshacerlo, ajusta la tabla de cargas previstas o usa anulación.</div>`;
+  out.innerHTML=html;
+  refreshDemandTotals();
+  updateSummary(lastPlan);
+  scheduleAutoSave();
+}
+function cancelDemandAndReplan(){
+  const product=document.getElementById('cancelProduct').value;
+  const day=Number(document.getElementById('cancelDay').value)||0;
+  const qty=n(document.getElementById('cancelTrucks').value);
+  const out=document.getElementById('cancelResult');
+  const env=isPack(product);
+  if(!product||qty<=0){out.innerHTML=`<div class="notice alert"><b>Aviso:</b> introduce un producto y una cantidad mayor que cero${env?' en toneladas':' en camiones'}.</div>`;return;}
+  const input=document.getElementById(`dem_${safeId(product)}_${day}`);
+  const previous=n(input.value);
+  if(previous<=0){out.innerHTML=`<div class="notice alert"><b>Aviso:</b> no hay ${env?'toneladas':'camiones'} previstos de ${productLabel(product)} para ${DAYS[day]}.</div>`;return;}
+  const cancelled=Math.min(qty,previous);
+  const newQty=Math.max(0,previous-cancelled);
+  input.value=newQty;
+  calculatePlan();
+  let html=`<div class="notice ok"><b>${env?'Toneladas de envasado anuladas':'Camiones anulados'} y previsión recalculada.</b><br>Se anulan ${fmtT(cancelled,env?2:0)} ${env?'t':'camión(es)'} de ${productLabel(product)} para ${DAYS[day]}. La carga prevista pasa de ${fmtT(previous,env?2:0)} a ${fmtT(newQty,env?2:0)} ${env?'t':'camión(es)'}.</div>`;
+  if(qty>previous){
+    html+=`<div class="notice alert"><b>Aviso:</b> se pidieron anular ${fmtT(qty,env?2:0)} ${env?'t':'camión(es)'}, pero solo había ${fmtT(previous,env?2:0)}. Se ha dejado la carga en cero, no en negativo.</div>`;
+  }
+  html+=`<div class="small">Después de la anulación se recalcula toda la semana con las nuevas cargas previstas.</div>`;
+  out.innerHTML=html;
+  refreshDemandTotals();
+  updateSummary(lastPlan);
+  scheduleAutoSave();
+}
+function replacePlannedOrderAndReplan(){
+  const day=Number(document.getElementById('replaceDay').value)||0;
+  const orderSel=document.getElementById('replaceOrder');
+  const product=document.getElementById('replaceProduct').value;
+  const tons=n(document.getElementById('replaceTons').value);
+  const startHour=parseTimeInputToHours(document.getElementById('replaceStartTime')?.value||'');
+  const out=document.getElementById('replaceResult');
+  if(!lastPlan){out.innerHTML='<div class="notice alert"><b>Aviso:</b> primero calcula la previsión para poder seleccionar una orden planificada.</div>';return;}
+  if(!orderSel.value){out.innerHTML='<div class="notice alert"><b>Aviso:</b> no hay orden planificada seleccionada para sustituir.</div>';return;}
+  if(!product||tons<=0){out.innerHTML='<div class="notice alert"><b>Aviso:</b> selecciona producto y toneladas mayores que cero.</div>';return;}
+  const idx=Number(orderSel.value);
+  const original=(lastPlan.actions||[])[idx];
+  const originalText=original?`${original.product} ${fmtT(original.tons,1)} t`:'';
+  manualReplacements=manualReplacements.filter(r=>!(r.day===day && r.originalIndex===idx));
+  manualReplacements.push({day,originalIndex:idx,originalText,originalProduct:original?.product||'',originalTons:original?.tons||0,product,tons,startHour,createdAt:new Date().toISOString()});
+  calculatePlan();
+  out.innerHTML=`<div class="notice ok"><b>Orden sustituida y previsión recalculada.</b><br>${DAYS[day]}: se sustituye ${originalText||'la orden seleccionada'} por ${product} - ${fmtT(tons,1)} t${startHour!=null?' desde las '+hoursToTimeInput(startHour):''}.</div><div class="small">La sustitución manual respeta la hora mínima de inicio indicada. Si queda tiempo libre antes o después, el programa vuelve a planificar otros productos posibles para no dejar huecos muertos, respetando stock, hueco, húmedo, lote mínimo y horas disponibles.</div>`;
+  refreshReplacementOrders();
+  scheduleAutoSave();
+}
+function clearManualReplacements(){
+  manualReplacements=[];
+  calculatePlan();
+  const out=document.getElementById('replaceResult');
+  if(out)out.innerHTML='<div class="notice ok"><b>Sustituciones manuales eliminadas.</b><br>Se ha recalculado la previsión automática original.</div>';
+  refreshReplacementOrders();
+  scheduleAutoSave();
+}
+
+
+function addMaintenanceAndReplan(){let day=Number(document.getElementById('maintDay')?.value)||0;let start=parseTimeInputToHours(document.getElementById('maintStartTime')?.value||'');let end=parseTimeInputToHours(document.getElementById('maintEndTime')?.value||'');let desc=(document.getElementById('maintDesc')?.value||'Mantenimiento').trim()||'Mantenimiento';let out=document.getElementById('maintenanceResult');if(start==null||end==null||end<=start){if(out)out.innerHTML='<div class="notice alert"><b>Aviso:</b> indica hora de inicio y fin válidas. La hora fin debe ser posterior a la hora inicio.</div>';return;}maintenanceWindows.push({day,start,end,desc,createdAt:new Date().toISOString()});calculatePlan();if(out)out.innerHTML=`<div class="notice ok"><b>Mantenimiento añadido y previsión recalculada.</b><br>${DAYS[day]} de ${hoursToTimeInput(start)} a ${hoursToTimeInput(end)}: ${desc}. En ese intervalo no se seca.</div>`;scheduleAutoSave()}
+function clearMaintenance(){maintenanceWindows=[];calculatePlan();let out=document.getElementById('maintenanceResult');if(out)out.innerHTML='<div class="notice ok"><b>Mantenimientos eliminados.</b><br>Se ha recalculado la previsión sin paradas programadas.</div>';scheduleAutoSave()}
+
+function runMinLotScenarios(){
+  const scenarios=[28,100,150,180,400];
+  const originalMin=document.getElementById('minLot').value;
+  const originalMax=document.getElementById('maxLot').value;
+  const rows=[];
+  scenarios.forEach(minVal=>{
+    document.getElementById('minLot').value=minVal;
+    if(n(document.getElementById('maxLot').value)<minVal)document.getElementById('maxLot').value=minVal;
+    calculatePlan();
+    const p=lastPlan;
+    const totalHours=(p?.dryHours||0)+(p?.emptyHours||0);
+    const available=(n(document.getElementById('hoursDay').value)||24)*7;
+    const stopHours=Math.max(0,available-totalHours);
+    rows.push({
+      min:minVal,
+      tons:p?.totalDry||0,
+      dry:p?.dryHours||0,
+      empty:p?.emptyHours||0,
+      stop:stopHours,
+      avgDry:(p?.dryHours||0)>0?(p.totalDry/p.dryHours):0,
+      avgWork:totalHours>0?(p.totalDry/totalHours):0,
+      actions:(p?.actions||[]).filter(a=>a.type==='secado').length,
+      changes:(p?.actions||[]).filter(a=>a.type==='vaciado'&&a.hours>0).length,
+      status:p?.status||'Sin calcular',
+      warnings:(p?.warnings||[]).length
+    });
+  });
+  document.getElementById('minLot').value=originalMin;
+  document.getElementById('maxLot').value=originalMax;
+  calculatePlan();
+  let html='<div class="tableWrap"><table><tr><th>Lote mínimo probado (t)</th><th>Toneladas secadas</th><th>Horas secando</th><th>Horas vaciado</th><th>Horas paradas</th><th>Media secado real (t/h)</th><th>Media trabajo incl. vaciado (t/h)</th><th>Lotes secados</th><th>Cambios producto</th><th>Estado</th></tr>';
+  rows.forEach(r=>{
+    const cls=r.warnings?'pill bad':'pill ok';
+    html+=`<tr><td><b>${fmtT(r.min,0)}</b></td><td>${fmtT(r.tons,1)}</td><td>${hm(r.dry)}</td><td>${hm(r.empty)}</td><td>${hm(r.stop)}</td><td>${fmtT(r.avgDry,1)}</td><td>${fmtT(r.avgWork,1)}</td><td>${r.actions}</td><td>${r.changes}</td><td><span class="${cls}">${r.status}${r.warnings?` (${r.warnings} avisos)`:''}</span></td></tr>`;
+  });
+  html+='</table></div><div class="small">La media de secado real solo usa horas secando. La media de trabajo incluye secado + vaciado. Las horas paradas son la diferencia hasta las horas semanales disponibles.</div>';
+  document.getElementById('scenarioOutput').innerHTML=html;
+}
+
+function renderPlan(plan){
+  let html='';
+  if((maintenanceWindows||[]).length) html+=`<div class="notice"><b>Mantenimientos/paradas programadas:</b><br>${maintenanceWindows.map(m=>'• '+DAYS[m.day]+': '+hoursToTimeInput(Number(m.start))+' - '+hoursToTimeInput(Number(m.end))+' '+(m.desc||'Mantenimiento')).join('<br>')}</div>`;
+  if((manualReplacements||[]).length) html+=`<div class="notice"><b>Sustituciones manuales activas:</b><br>${manualReplacements.map(r=>'• '+DAYS[r.day]+': '+(r.originalText||'orden seleccionada')+' → '+r.product+' '+fmtT(r.tons,1)+' t'+(r.startHour!=null?' desde '+hoursToTimeInput(Number(r.startHour)):'' )).join('<br>')}</div>`;
+  if(plan.warnings.length) html+=`<div class="notice alert"><b>Avisos:</b><br>${plan.warnings.map(w=>'• '+w).join('<br>')}</div>`;
+  html+=`<p><b>Regla aplicada:</b> se garantiza material antes de servir cada día, se agrupan toneladas del mismo producto, un lote puede continuar al día siguiente y no se empieza otro lote si el anterior no ha terminado. Se intenta minimizar paradas y, terminada la previsión, se llenan silos si hay hueco y producto húmedo.</p>`;
+  html+=`<div class="tableWrap"><table class="planTable"><tr><th class="colDay">Día</th><th class="colTime">Inicio</th><th class="colTime">Fin</th><th class="colType">Tipo</th><th class="colDetails">Detalle</th><th class="colDuration">Tiempo</th></tr>`;
+  plan.actions.forEach(a=>{
+    let hd=n(document.getElementById('hoursDay').value)||24;
+    let ini=a.startText||(a.start!=null?clockFromWeekHour(a.start,hd):'');
+    let fin=a.endText||(a.end!=null?clockFromWeekHour(a.end,hd):'');
+    let detalle=a.type==='secado'?`${productLabel(a.product)}: ${fmtT(a.tons,1)} t desde ${a.origin}. ${a.reason}${a.by?'. Subproducto: '+a.by:''}`:(a.type==='vaciado'?`Cambio ${a.from} → ${a.to}`:(a.detail||''));
+    html+=`<tr><td>${DAYS[a.day]}</td><td><b>${ini}</b></td><td><b>${fin}</b></td><td>${a.type}</td><td class="left">${detalle}</td><td>${hm(a.hours)}</td></tr>`;
+  });
+  html+='</table></div>';
+  plan.snapshots.forEach(s=>{
+    let wetRows=Object.entries(s.wet).map(([k,v])=>`<tr><td class="colWetProduct" title="${k}">${k}</td><td class="colWetTons">${fmtT(v,0)}</td></tr>`).join('');
+    let siloRows=s.silos.map(si=>`<tr><td class="colSilo">${si.id}</td><td class="colProduct" title="${si.product}">${si.product}</td><td class="colTons">${fmtT(si.cur,0)}</td><td class="colGap">${fmtT(Math.max(0,si.max-si.cur),0)}</td></tr>`).join('');
+    html+=`<div class="resultDay"><h3>${DAYS[s.day]} - estado final</h3><div class="two"><div class="tableWrap"><table class="finalStateTable"><tr><th class="colSilo">Silo</th><th class="colProduct">Producto</th><th class="colTons">Toneladas</th><th class="colGap">Hueco</th></tr>${siloRows}</table></div><div class="tableWrap"><table class="wetFinalTable"><tr><th class="colWetProduct">Producto húmedo</th><th class="colWetTons">Toneladas finales</th></tr>${wetRows}</table></div></div></div>`;
+  });
+  if(plan.lowWet.length) html+=`<div class="notice"><b>Sugerencia de productos húmedos:</b><br>No hay húmedo para fabricar dos lotes mínimos en:<br>${plan.lowWet.map(x=>'• '+x).join('<br>')}</div>`;
+  document.getElementById('planOutput').innerHTML=html;
+  refreshReplacementOrders();
+}
+
+function normalizeText(v){return String(v||'').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_')}
+function dayIndexFromValue(v){let t=normalizeText(v);if(!t)return null;let map={LUNES:0,L:0,LU:0,MONDAY:0,MARTES:1,M:1,MA:1,TUESDAY:1,MIERCOLES:2,MI:2,WEDNESDAY:2,JUEVES:3,J:3,JU:3,THURSDAY:3,VIERNES:4,V:4,VI:4,FRIDAY:4,SABADO:5,S:5,SA:5,SATURDAY:5,DOMINGO:6,D:6,DO:6,SUNDAY:6};if(map[t]!=null)return map[t];let d=new Date(String(v).trim());if(!isNaN(d)){let js=d.getDay();return js===0?6:js-1}let m=String(v).match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);if(m){let dd=Number(m[1]),mm=Number(m[2])-1,yy=m[3]?Number(m[3]):new Date().getFullYear();if(yy<100)yy+=2000;let dt=new Date(yy,mm,dd);if(!isNaN(dt)){let js=dt.getDay();return js===0?6:js-1}}return null}
+function splitCsvLine(line,sep){let out=[],cur='',q=false;for(let i=0;i<line.length;i++){let ch=line[i];if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}else if(ch===sep&&!q){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out.map(x=>x.trim().replace(/^"|"$/g,''))}
+function parseSapCsv(text){let clean=String(text||'').replace(/^\uFEFF/,'').trim();if(!clean)return [];let lines=clean.split(/\r?\n/).filter(l=>l.trim());let sep=(lines[0].split(';').length>=lines[0].split(',').length)?';':',';let header=splitCsvLine(lines[0],sep).map(normalizeText);let rows=[];for(let i=1;i<lines.length;i++){let vals=splitCsvLine(lines[i],sep);let row={};header.forEach((h,idx)=>row[h]=vals[idx]??'');rows.push(row)}return rows}
+function getCsvField(row,names){for(const name of names){let k=normalizeText(name);if(row[k]!=null&&row[k]!=='')return row[k]}return ''}
+function numberFromCsv(v){
+  // Lectura robusta de números exportados desde SAP/Excel.
+  // Evita que 45,15 o 45.15 se conviertan por error en 4515.
+  if(typeof v==='number') return isFinite(v)?v:0;
+  let t=String(v??'').trim();
+  if(!t) return 0;
+  t=t.replace(/\s/g,'').replace(/[€$]/g,'').replace(/[A-Za-záéíóúÁÉÍÓÚñÑ]/g,'');
+  t=t.replace(/[^0-9,\.\-]/g,'');
+  if(!t || t==='-' || t==='.' || t===',') return 0;
+  const neg=t.startsWith('-');
+  t=t.replace(/-/g,'');
+  const lastComma=t.lastIndexOf(',');
+  const lastDot=t.lastIndexOf('.');
+  let decSep='';
+  if(lastComma>=0 && lastDot>=0){
+    // Si aparecen los dos, el último separador suele ser el decimal: 1.234,56 o 1,234.56
+    decSep=lastComma>lastDot?',':'.';
+  }else if(lastComma>=0){
+    // En SAP español la coma suele ser decimal: 45,15
+    decSep=',';
+  }else if(lastDot>=0){
+    const parts=t.split('.');
+    const last=parts[parts.length-1];
+    if(parts.length===2){
+      // 45.15 debe ser decimal. 2.500 normalmente es miles; 45.150 en SAP puede ser 45,150 t.
+      if(last.length<=2) decSep='.';
+      else if(last.length===3 && parts[0].length<=2 && last.endsWith('0')) decSep='.';
+      else decSep='';
+    }else{
+      // Varios puntos: normalmente miles, salvo que el último grupo tenga 1-2 decimales.
+      decSep=last.length<=2?'.':'';
+    }
+  }
+  let normalized;
+  if(decSep){
+    const idx=t.lastIndexOf(decSep);
+    const intPart=t.slice(0,idx).replace(/[.,]/g,'');
+    let decPart=t.slice(idx+1).replace(/[.,]/g,'');
+    // Si venía como 45.150 / 45,150, lo interpretamos como 45.15 cuando termina en cero.
+    if(decPart.length===3 && decPart.endsWith('0')) decPart=decPart.slice(0,2);
+    normalized=(neg?'-':'')+(intPart||'0')+'.'+decPart;
+  }else{
+    normalized=(neg?'-':'')+t.replace(/[.,]/g,'');
+  }
+  const x=Number(normalized);
+  return isFinite(x)?x:0;
+}
+
+function findProductKeyFromSap(value){
+  const raw=String(value||'').trim();
+  const clean=raw.toUpperCase().replace(/\s+/g,'');
+  if(dryProducts.includes(clean))return clean;
+  for(const x of packagedItems){
+    const keys=[x.producto,x.refSap,x.refReal,packLabel(packId(x))].map(v=>String(v||'').trim().toUpperCase().replace(/\s+/g,''));
+    if(keys.includes(clean))return packId(x);
+  }
+  return clean;
+}
+
+
+function looseKey(v){return normalizeText(v).replace(/[^A-Z0-9]/g,'')}
+function getRowFieldLoose(row,names){
+  const keys=Object.keys(row||{});
+  for(const name of names){
+    const nk=normalizeText(name), lk=looseKey(name);
+    for(const k of keys){
+      if(k===nk || looseKey(k)===lk) return row[k];
+    }
+  }
+  return '';
+}
+
+function getRowFieldByIncludes(row,includeGroups,excludeWords=[]){
+  const keys=Object.keys(row||{});
+  const ex=(excludeWords||[]).map(looseKey);
+  for(const k of keys){
+    const lk=looseKey(k);
+    if(ex.some(w=>w&&lk.includes(w))) continue;
+    const ok=(includeGroups||[]).every(group=>group.map(looseKey).some(w=>w&&lk.includes(w)));
+    if(ok && row[k]!=='' && row[k]!=null) return row[k];
+  }
+  return '';
+}
+function getSapPendingProduct(row){
+  // 1) Prioridad: columna exacta PRODUCTO. 2) Otras columnas habituales de SAP.
+  let v=getRowFieldLoose(row,['PRODUCTO','Producto','Producto SAP','Producto_SAP','Material','Artículo','Articulo','Descripción material','Descripcion material']);
+  if(v) return String(v).trim();
+  v=getRowFieldByIncludes(row,[['PRODUCTO']]);
+  if(v) return String(v).trim();
+  v=getRowFieldLoose(row,['Texto adicional 3','Texto adicional 4','Referencia','REF SAP','Ref SAP','Código','Codigo']);
+  if(v) return String(v).trim();
+  return '';
+}
+function getSapPendingDate(row){
+  let v=getRowFieldLoose(row,['Fecha plan. de carga','Fecha plan de carga','Fecha_plan_de_carga','Fecha planificada de carga','Fecha planificada','Fecha carga','Fecha','Día','Dia','Date']);
+  if(v) return v;
+  v=getRowFieldByIncludes(row,[['FECHA'],['CARGA','PLAN']]);
+  if(v) return v;
+  return getRowFieldByIncludes(row,[['FECHA']]);
+}
+function getSapPendingLoads(row){
+  let v=getRowFieldLoose(row,['Nº de cargas','N° de cargas','No de cargas','N de cargas','Nº cargas','N° cargas','No cargas','Numero de cargas','Número de cargas','N cargas','Cargas','Nº camiones','N° camiones','No camiones','Numero de camiones','Número de camiones','Camiones','Cantidad_camiones','Pendiente_cargar_camiones','Camiones_previstos','Camiones_pendientes']);
+  if(v!=='' && v!=null) return v;
+  v=getRowFieldByIncludes(row,[['CARGA']],['FECHA']);
+  if(v!=='' && v!=null) return v;
+  v=getRowFieldByIncludes(row,[['CAMION']],[]);
+  if(v!=='' && v!=null) return v;
+  return '';
+}
+function normalizeExcelRows(rawRows){
+  return (rawRows||[]).map(r=>{let o={};Object.keys(r||{}).forEach(k=>{o[normalizeText(k)]=r[k]});return o;});
+}
+function captureMatrixValues(prefix, products){
+  const out={};
+  (products||allProducts()).forEach(p=>{out[p]=DAYS.map((_,i)=>{let el=document.getElementById(`${prefix}_${p}_${i}`);return el?el.value:'0';});});
+  return out;
+}
+function restoreMatrixValues(prefix, values){
+  Object.keys(values||{}).forEach(p=>DAYS.forEach((_,i)=>{let el=document.getElementById(`${prefix}_${p}_${i}`);if(el)el.value=values[p][i]??'0';}));
+}
+function importPackagedExcel(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const out=document.getElementById('packResult');
+  const oldProducts=allProducts();
+  const demandBefore=captureMatrixValues('dem',oldProducts);
+  const loadedBefore=captureMatrixValues('load',oldProducts);
+  const finish=(rows)=>{
+    try{
+      rows=normalizeExcelRows(rows);
+      const imported=[];
+      const ignored=[];
+      rows.forEach((row,idx)=>{
+        const disponible=numberFromCsv(getRowFieldLoose(row,['DISPONIBLE (t)','Disponible (t)','DISPONIBLE_T','Disponible t','Disponible','Stock disponible','Cantidad disponible']));
+        if(!(disponible>0)) return;
+        const producto=String(getRowFieldLoose(row,['PRODUCTO','Producto','Material','Descripcion','Descripción','Texto breve de material'])||'').trim();
+        const palets=String(getRowFieldLoose(row,['PALETS/BB','Palets/BB','PALETS BB','Palets','BB','Bultos'])||'').trim();
+        const refReal=String(getRowFieldLoose(row,['REF REAL','Ref real','Referencia real','PRODUCTO CLIENTE','Producto cliente'])||'').trim();
+        const refSap=String(getRowFieldLoose(row,['REF SAP','Ref SAP','Referencia SAP','PRODUCTO SAP','Producto SAP','Material SAP','Codigo SAP','Código SAP'])||'').trim();
+        if(!producto && !refReal && !refSap){ignored.push(`Fila ${idx+2}: disponible > 0 pero sin PRODUCTO/REF REAL/REF SAP`);return;}
+        imported.push({producto,palets,disponible,refReal,refSap});
+      });
+      const agg=new Map();
+      for(const x of imported){
+        const key=[x.producto,x.refSap,x.refReal].map(v=>String(v||'').trim().toUpperCase()).join('|');
+        if(agg.has(key)){
+          const y=agg.get(key); y.disponible+=x.disponible;
+          if(!y.palets)y.palets=x.palets;
+        }else agg.set(key,{...x});
+      }
+      packagedItems=Array.from(agg.values());
+      renderPackaged();
+      renderDemand();
+      
+      restoreMatrixValues('dem',demandBefore);
+      restoreMatrixValues('load',loadedBefore);
+      renderAdditionalOrder();
+      renderCancelOrder();
+      refreshDemandTotals(false);
+      
+      calculatePlan();
+      scheduleAutoSave();
+      out.innerHTML=`<div class="notice ok"><b>Envasados importados correctamente.</b><br>Fichero: ${file.name}. Referencias con DISPONIBLE (t) &gt; 0: ${packagedItems.length}.</div>`+(ignored.length?`<div class="notice alert"><b>Filas no importadas:</b><br>${ignored.slice(0,12).join('<br>')}${ignored.length>12?'<br>...':''}</div>`:'');
+    }catch(err){
+      out.innerHTML=`<div class="notice alert"><b>Error importando envasados:</b> ${err.message}</div>`;
+    }finally{
+      e.target.value='';
+    }
+  };
+  const ext=(file.name.split('.').pop()||'').toLowerCase();
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      if(ext==='csv'){
+        finish(parseSapCsv(reader.result));
+      }else{
+        if(typeof XLSX==='undefined') throw new Error('No se ha cargado la librería Excel. Abre el programa con conexión a internet o exporta desde SAP en CSV.');
+        const wb=XLSX.read(reader.result,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
+        finish(rows);
+      }
+    }catch(err){
+      out.innerHTML=`<div class="notice alert"><b>Error leyendo el archivo:</b> ${err.message}</div>`;
+      e.target.value='';
+    }
+  };
+  if(ext==='csv') reader.readAsText(file,'UTF-8');
+  else reader.readAsArrayBuffer(file);
+}
+
+
+function displayDateShort(dt){return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')}
+function dateKeyLocal(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0')}
+function parseSapDateValue(v){
+  if(v instanceof Date && !isNaN(v)) return new Date(v.getFullYear(),v.getMonth(),v.getDate());
+  if(typeof v==='number' && isFinite(v)){
+    // Fechas Excel: días desde 1899-12-30
+    let d=new Date(Math.round((v-25569)*86400*1000));
+    if(!isNaN(d)) return new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  }
+  let t=String(v||'').trim(); if(!t)return null;
+  let m=t.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?/);
+  if(m){let dd=Number(m[1]),mm=Number(m[2])-1,yy=m[3]?Number(m[3]):new Date().getFullYear();if(yy<100)yy+=2000;let d=new Date(yy,mm,dd);return isNaN(d)?null:new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+  let d=new Date(t); if(!isNaN(d))return new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  return null;
+}
+function buildSapDateRange(){
+  const a=document.getElementById('sapStartDate')?.value;
+  const b=document.getElementById('sapEndDate')?.value;
+  if(!a||!b)throw new Error('Indica fecha inicial y fecha final antes de importar pendientes SAP.');
+  let start=parseSapDateValue(a), end=parseSapDateValue(b);
+  if(!start||!end)throw new Error('No se reconocen las fechas inicial/final.');
+  if(end<start)throw new Error('La fecha final no puede ser anterior a la fecha inicial.');
+  let dates=[]; let d=new Date(start);
+  while(d<=end){dates.push(new Date(d));d.setDate(d.getDate()+1);if(dates.length>7)throw new Error('El planificador tiene 7 columnas. Selecciona un periodo máximo de 7 días.');}
+  return dates;
+}
+function sapProductGroup(p){let t=normRef(p);if(t.includes('RP'))return 0;if(t.includes('FV2000'))return 1;if(t.includes('SAC')||t.includes('SACO')||t.includes('BB')||t.includes('BIGBAG'))return 2;if(t.includes('ARENA'))return 3;return 9}
+function isSapPendingProductWanted(p){if(isSapBlockedProduct(p))return false;let g=sapProductGroup(p);return g===0||g===1||g===2||g===3||isSapPackRef(p)}
+function orderedProductsForDemand(){
+  // Orden fijo solicitado y añade productos húmedos de la tabla.
+  return demandProducts().sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}));
+}
+function resetDemandTableValues(){allDemandTableProducts().forEach(p=>DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=0;}));}
+function readExcelOrCsvFile(file,onRows,out){
+  const ext=(file.name.split('.').pop()||'').toLowerCase();
+  const reader=new FileReader();
+  reader.onload=()=>{try{
+    if(ext==='csv') onRows(parseSapCsv(reader.result));
+    else{
+      const wb=XLSX.read(reader.result,{type:'array',cellDates:true});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      onRows(normalizeExcelRows(XLSX.utils.sheet_to_json(ws,{defval:'',raw:false})));
+    }
+  }catch(err){out.innerHTML=`<div class="notice alert"><b>Error leyendo el archivo:</b> ${err.message}</div>`;}};
+  if(ext==='csv')reader.readAsText(file,'UTF-8');else reader.readAsArrayBuffer(file);
+}
+function importSapPendingFile(e){
+  const file=e.target.files&&e.target.files[0]; if(!file)return;
+  const out=document.getElementById('sapImportResult');
+  readExcelOrCsvFile(file,(rows)=>{
+    try{
+      const dates=buildSapDateRange();
+      const keyToCol={}; dates.forEach((d,i)=>keyToCol[dateKeyLocal(d)]=i);
+      sapPendingDateLabels=DAYS.map((d,i)=>dates[i]?{label:displayDateShort(dates[i]),sub:DAYS[dates[i].getDay()===0?6:dates[i].getDay()-1]}:{label:'',sub:''});
+      const agg={}; let ignored=[], read=0;
+      rows.forEach((row,idx)=>{
+        const product=getSapPendingProduct(row);
+        if(!product||!isSapPendingProductWanted(product))return;
+        read++;
+        let dt=parseSapDateValue(getSapPendingDate(row));
+        if(!dt){ignored.push(`Fila ${idx+2}: fecha no reconocida para ${product}`);return;}
+        // Si la fecha del pendiente SAP es anterior a la fecha inicial seleccionada, se cambia y se acumula en la fecha inicial.
+        if(dt<dates[0]) dt=new Date(dates[0].getFullYear(),dates[0].getMonth(),dates[0].getDate());
+        const col=keyToCol[dateKeyLocal(dt)];
+        if(col==null)return; // posterior al rango elegido
+        let qty=numberFromCsv(getSapPendingLoads(row));
+        if(!qty){let tons=numberFromCsv(getRowFieldLoose(row,['Toneladas','Cantidad_t','T','Peso','Cantidad'])); if(tons)qty=tons/(n(truckT.value)||28);}
+        // Si no hay columna de nº de cargas, asumimos que cada fila del Excel representa 1 carga/camión.
+        if(!qty) qty=1;
+        if(qty<=0){ignored.push(`Fila ${idx+2}: nº de cargas vacío o cero para ${product}`);return;}
+        if(!agg[product])agg[product]=DAYS.map(()=>0);
+        agg[product][col]+=qty;
+      });
+      const importedProducts=Object.keys(agg).sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||a.localeCompare(b,'es'));
+      sapPendingProducts=importedProducts.filter(p=>!dryProducts.includes(p)&&!packagedItems.some(x=>packId(x)===p));
+      renderDemand();renderAdditionalOrder();renderCancelOrder();renderReplacementOrder();renderPackPending();
+      resetDemandTableValues();
+      importedProducts.forEach(p=>DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=agg[p][i]||0;}));
+      refreshDemandTotals(false);renderPackPending();calculatePlan();scheduleAutoSave();
+      const total=importedProducts.reduce((a,p)=>a+agg[p].reduce((x,y)=>x+y,0),0);
+      out.innerHTML=`<div class="notice ok"><b>Pendientes SAP importados.</b><br>Fichero: ${file.name}. Periodo: ${displayDateShort(dates[0])} a ${displayDateShort(dates[dates.length-1])}. Filas leídas con RP/FV2000/SAC/arena, excluyendo FC/FV016: ${read}. Productos importados: ${importedProducts.length}. Nº total de cargas: ${fmtT(total,0)}.</div>`+(ignored.length?`<div class="notice alert"><b>Filas no importadas:</b><br>${ignored.slice(0,12).join('<br>')}${ignored.length>12?'<br>...':''}</div>`:'');
+    }catch(err){out.innerHTML=`<div class="notice alert"><b>Error importando pendientes SAP:</b> ${err.message}</div>`;}
+    e.target.value='';
+  },out);
+}
+
+function importSapCsv(e,mode){let file=e.target.files&&e.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=()=>{let out=document.getElementById('sapImportResult');try{let rows=parseSapCsv(reader.result);let truck=n(truckT.value)||28;let applied=0,ignored=[];rows.forEach((row,idx)=>{let product=findProductKeyFromSap(getCsvField(row,['Producto','Producto seco','Producto_seco','Material','Artículo','Articulo','Código','Codigo','REF SAP','Ref SAP','REF REAL','Ref real']));if(isSapBlockedProduct(product)){ignored.push(`Fila ${idx+2}: producto excluido por contener FC o FV016 (${product})`);return;}if(!allProducts().includes(product)){ignored.push(`Fila ${idx+2}: producto no reconocido (${productLabel(product)||'vacío'})`);return;}let dayVal=getCsvField(row,['Dia','Día','Fecha','Date']);let day=dayIndexFromValue(dayVal);if(day==null||day<0||day>6){ignored.push(`Fila ${idx+2}: día/fecha no reconocido (${dayVal||'vacío'})`);return;}let qty=0;if(mode==='loaded')qty=numberFromCsv(getCsvField(row,['Ya_cargado_camiones','Camiones_cargados','Cargados','Camiones','Cantidad_camiones']));else qty=numberFromCsv(getCsvField(row,['Pendiente_cargar_camiones','Pendientes','Pendiente','Camiones_previstos','Camiones_pendientes','Camiones','Cantidad_camiones']));let tons=numberFromCsv(getCsvField(row,['Toneladas','Toneladas_pendientes','Toneladas_cargadas','Cantidad_t','T','Disponible (t)']));if(isPack(product)){if(tons)qty=tons;}else{if(!qty&&tons)qty=tons/truck;}let id=(mode==='loaded'?`load_${safeId(product)}_${day}`:`dem_${safeId(product)}_${day}`);let el=document.getElementById(id);if(!el){ignored.push(`Fila ${idx+2}: no se encontró celda para ${productLabel(product)} ${DAYS[day]}`);return;}el.value=Math.max(0,qty);applied++;});refreshDemandTotals(false);calculatePlan();scheduleAutoSave();let tipo=mode==='loaded'?'productos cargados':'pendientes de cargar';out.innerHTML=`<div class="notice ok"><b>Importación SAP realizada.</b><br>Fichero: ${file.name}. Tipo: ${tipo}. Registros aplicados: ${applied}. La previsión se ha recalculado.</div>`+(ignored.length?`<div class="notice alert"><b>Filas no importadas:</b><br>${ignored.slice(0,12).join('<br>')}${ignored.length>12?'<br>...':''}</div>`:'');}catch(err){out.innerHTML=`<div class="notice alert"><b>Error importando CSV:</b> ${err.message}</div>`;}e.target.value=''};reader.readAsText(file,'UTF-8')}
+
+function buildJsonData(){let data=getState();data.lastPlan=lastPlan;data.manualReplacements=manualReplacements;data.maintenanceWindows=maintenanceWindows;data.sapPendingProducts=sapPendingProducts;data.sapPendingDateLabels=sapPendingDateLabels;data.wetProductsList=wetProductsDefault;data.meta={fileName:JSON_FILE_NAME,lastUpdate:new Date().toISOString()};return data}
+function updateJsonInfo(status){let f=document.getElementById('jsonFolderPath'),n=document.getElementById('jsonFileName'),u=document.getElementById('jsonLastUpdate');if(!f||!n||!u)return;n.textContent=JSON_FILE_NAME;f.textContent=jsonDirectoryHandle?(jsonDirectoryHandle.name+' /'):'No seleccionada';if(status)u.textContent=status}
+async function selectJsonFolder(){
+  if(!window.showDirectoryPicker){
+    alert('Tu navegador no permite seleccionar una carpeta desde un archivo HTML. Usa Chrome o Edge en ordenador. Puedes seguir usando Exportar JSON.');
+    return;
+  }
+  try{
+    jsonDirectoryHandle=await window.showDirectoryPicker({mode:'readwrite'});
+    updateJsonInfo('Carpeta seleccionada. Comprobando JSON existente...');
+    try{
+      const existingHandle=await jsonDirectoryHandle.getFileHandle(JSON_FILE_NAME,{create:false});
+      const existingFile=await existingHandle.getFile();
+      const ok=confirm('Se ha encontrado el archivo '+JSON_FILE_NAME+' en la carpeta seleccionada.\n\n¿Quieres importarlo ahora?');
+      if(ok){
+        const text=await existingFile.text();
+        const data=JSON.parse(text);
+        applyState(data);
+        lastPlan=data.lastPlan||null;
+        if(lastPlan)renderPlan(lastPlan);else document.getElementById('planOutput').innerHTML='Sin previsión calculada.';
+        updateSummary(lastPlan);
+        const dt=existingFile.lastModified?new Date(existingFile.lastModified):new Date();
+        document.getElementById('jsonLastUpdate').textContent='Importado: '+dt.toLocaleDateString('es-ES')+' '+dt.toLocaleTimeString('es-ES');
+        alert('JSON importado correctamente desde la carpeta seleccionada.');
+        await autoSaveNow();
+        return;
+      }
+    }catch(fileErr){
+      if(fileErr.name!=='NotFoundError')throw fileErr;
+    }
+    updateJsonInfo('Carpeta seleccionada. Guardando...');
+    await autoSaveNow();
+  }catch(err){
+    if(err.name!=='AbortError')alert('No se pudo seleccionar/importar la carpeta JSON: '+err.message);
+  }
+}
+function scheduleAutoSave(){if(applyingState)return;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(autoSaveNow,450)}
+async function autoSaveNow(){if(!jsonDirectoryHandle){updateJsonInfo('Sin guardar automáticamente: selecciona carpeta');return}try{let handle=await jsonDirectoryHandle.getFileHandle(JSON_FILE_NAME,{create:true});let writable=await handle.createWritable();await writable.write(JSON.stringify(buildJsonData(),null,2));await writable.close();let now=new Date();document.getElementById('jsonLastUpdate').textContent=now.toLocaleDateString('es-ES')+' '+now.toLocaleTimeString('es-ES');['extraTrucks','extraPackTons','extraDay'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',checkExtraAvailability);});updateJsonInfo()}catch(err){document.getElementById('jsonLastUpdate').textContent='Error guardando: '+err.message}}
+
+function exportJSON(){let data=buildJsonData();let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=JSON_FILE_NAME;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);applyState(d);lastPlan=d.lastPlan||null;if(lastPlan)renderPlan(lastPlan);else document.getElementById('planOutput').innerHTML='Sin previsión calculada.';updateSummary(lastPlan);refreshReplacementOrders();scheduleAutoSave();alert('JSON importado correctamente.')}catch(err){alert('No se pudo importar el JSON: '+err.message)}};r.readAsText(f);e.target.value=''}
+function applyState(d){applyingState=true;if(Array.isArray(d.wetProductsList)){d.wetProductsList.forEach(w=>{if(Array.isArray(w)&&w[0]&&!wetProductsDefault.some(x=>x[0]===w[0]))wetProductsDefault.push([w[0],n(w[1]),w[2]!==false]);});renderWetDry();renderDeleteWetSelector();}packagedItems=Array.isArray(d.packagedItems)?d.packagedItems:[];sapPendingProducts=Array.isArray(d.sapPendingProducts)?d.sapPendingProducts:[];sapPendingDateLabels=Array.isArray(d.sapPendingDateLabels)?d.sapPendingDateLabels:null;renderPackaged();renderDemand();renderAdditionalOrder();renderCancelOrder();truckT.value=d.truck??28;hoursDay.value=d.hd??24;minLot.value=d.min??180;maxLot.value=d.max??400;pct0508to0104.value=(d.pct0508??0.08)*100;pct0816to0508.value=(d.pct0816??0.12)*100;wetProductsDefault.forEach(w=>{if(d.wet?.[w[0]]!=null)document.getElementById('wetT_'+w[0]).value=d.wet[w[0]];if(d.wetEnabled?.[w[0]]!=null)document.getElementById('wetSel_'+w[0]).checked=d.wetEnabled[w[0]]});dryProducts.forEach(p=>{if(d.dry?.[p]){document.getElementById('origin_'+p).value=d.dry[p].origin;document.getElementById('rate_'+p).value=d.dry[p].rate}});(d.silos||[]).forEach(s=>{if(document.getElementById('siloProd_'+s.id)){document.getElementById('siloProd_'+s.id).value=s.product;document.getElementById('siloMax_'+s.id).value=s.max;document.getElementById('siloCur_'+s.id).value=s.cur;if(document.getElementById('siloAct_'+s.id))document.getElementById('siloAct_'+s.id).checked=s.active!==false}});allDemandTableProducts().forEach(p=>DAYS.forEach((_,i)=>{if(d.demand?.[p]?.[i]!=null){let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=isPack(p)?d.demand[p][i]:d.demand[p][i]/(d.truck||28)}}));dryProducts.forEach(f=>dryProducts.forEach(t=>{if(d.chg?.[f]?.[t]!=null)document.getElementById(`chg_${f}_${t}`).value=d.chg[f][t]}));renderDestinations();dest0508to0104.value=d.dest0508||'C8';dest0816to0508.value=d.dest0816||'C13';manualReplacements=Array.isArray(d.manualReplacements)?d.manualReplacements:[];maintenanceWindows=Array.isArray(d.maintenanceWindows)?d.maintenanceWindows:(Array.isArray(d.maintenance)?d.maintenance:[]);refreshSiloGaps();refreshDemandTotals();applyingState=false;refreshReplacementOrders()}
+function restoreDefaults(){lastPlan=null;manualReplacements=[];maintenanceWindows=[];packagedItems=[];sapPendingProducts=[];sapPendingDateLabels=null;wetProductsDefault.splice(0,wetProductsDefault.length,...JSON.parse(JSON.stringify(wetProductsInitial)));document.getElementById('planOutput').innerHTML='Sin previsión calculada.';renderAll()}
+function clearPlan(){lastPlan=null;manualReplacements=[];maintenanceWindows=[];document.getElementById('planOutput').innerHTML='Previsión anulada.';updateSummary(null)}
+window.addEventListener('DOMContentLoaded',renderAll);
+</script>
+</body>
+</html>
