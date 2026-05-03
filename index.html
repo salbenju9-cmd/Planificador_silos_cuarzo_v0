@@ -3,16 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planificador de secado - Silos de cuarzo</title>
+<title>Planificador de secado - Silos de cuarzo v51 - 03/05/2026</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--line:#d9e2ef;--txt:#172033;--muted:#5d6b82;--accent:#2563eb;--ok:#16803a;--warn:#b7791f;--bad:#c53030;--soft:#eef4ff}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:var(--txt);font-size:14px}.wrap{max-width:1680px;margin:0 auto;padding:18px}h1{font-size:24px;margin:0 0 14px}h2{font-size:18px;margin:0 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 1px 4px #0001}.grid{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:10px}.field label{display:block;font-weight:700;margin-bottom:5px;color:var(--muted)}input,select,button{font:inherit}input,select{width:100%;padding:7px;border:1px solid #b8c4d6;border-radius:8px;background:#fff}button{border:0;border-radius:10px;background:var(--accent);color:#fff;padding:10px 14px;font-weight:700;cursor:pointer;margin:4px 6px 4px 0}button.secondary{background:#475569}button.folderBtn{background:#facc15;color:#1f2937;border:1px solid #d97706}button.danger{background:#b91c1c}button.light{background:#64748b}.buttons{display:flex;flex-wrap:wrap;align-items:center}.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;max-height:70vh}table{border-collapse:collapse;width:100%;min-width:920px}th,td{border:1px solid var(--line);padding:6px;text-align:center;vertical-align:middle}th{background:#eaf1fb;position:sticky;top:0;z-index:1}td.left,th.left{text-align:left}.center input,.center select,.center{text-align:center}.wetAvail input{max-width:85px;text-align:center}.rateInput input{max-width:90px;text-align:center}.spacerCol{border-left:12px solid #fff} @media print{body{background:#fff;font-size:11pt}.wrap{max-width:none;padding:0}.card{box-shadow:none;border:0;margin-bottom:10px;break-inside:avoid}.noPrint,.buttons,.sectionHead button{display:none!important}.tableWrap{overflow:visible;max-height:none;border:0}th{position:static}select,input{border:0;background:transparent;text-align:center}h1{font-size:18pt}h2{font-size:14pt}.printOnly{display:block!important}}.small{font-size:12px;color:var(--muted)}.summary{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:8px}.kpi{background:var(--soft);border:1px solid #c8d8f6;border-radius:12px;padding:10px}.kpi b{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.kpi span{font-size:18px;font-weight:800}.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-weight:700}.pill.ok{background:#dcfce7;color:var(--ok)}.pill.warn{background:#fef3c7;color:var(--warn)}.pill.bad{background:#fee2e2;color:var(--bad)}.resultDay{margin-top:14px;border-left:5px solid var(--accent);padding-left:10px}.muted{color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.finalStateTable{min-width:0;table-layout:fixed}.finalStateTable th,.finalStateTable td{padding:4px 3px}.finalStateTable .colSilo{width:44px}.finalStateTable .colProduct{width:70px;max-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.finalStateTable .colTons,.finalStateTable .colGap{width:55px}.wetFinalTable{min-width:0;table-layout:fixed}.wetFinalTable th,.wetFinalTable td{padding:4px 3px}.wetFinalTable .colWetProduct{width:95px;max-width:95px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wetFinalTable .colWetTons{width:70px}.notice{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px;margin:8px 0}.notice.alert{background:#fee2e2;border-color:#ef4444;color:#7f1d1d}.notice.alert b{color:#991b1b}.notice.ok{background:#dcfce7;border-color:#22c55e;color:#14532d}.inactiveSilo{opacity:.45;background:#f1f5f9}.hidden{display:none}.jsonInfo{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:8px;margin-top:8px}.jsonInfo .box{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:8px}.jsonInfo b{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}@media(max-width:900px){.jsonInfo{grid-template-columns:1fr}}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.sectionHead button{padding:7px 10px;background:#64748b}.collapsed .tableWrap,.collapsed .small{display:none}@media(max-width:900px){.grid,.summary,.two{grid-template-columns:1fr}.wrap{padding:10px}table{min-width:760px}}
 .planTable{table-layout:fixed;min-width:920px}.planTable .colDay{width:80px}.planTable .colTime{width:90px}.planTable .colType{width:90px}.planTable .colDetails{width:auto}.planTable .colDuration{width:90px}
+
+.headerBlue{background:#facc15;color:#1f2937;border-radius:14px;padding:12px 14px;margin-bottom:14px;box-shadow:0 1px 4px #0002}
+.headerBlue h1{color:#1f2937;margin:0}
+.versionSmall{font-size:12px;color:#713f12;margin-top:4px}
+.card.blueTitle{border-color:#1d4ed8}
+.card.blueTitle>h2{background:#1d4ed8;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+
+
+.card.greenTitle{border-color:#15803d}
+.card.greenTitle>.sectionHead{background:#15803d;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.greenTitle>.sectionHead h2{color:#fff;margin:0}
+.card.greenTitle>.sectionHead button{background:#bbf7d0;color:#14532d}
+
+
+.card.lightBlueTitle{border-color:#7dd3fc;background:#f0f9ff}
+.card.lightBlueTitle>h2{background:#bae6fd;color:#075985;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle{border-color:#86efac;background:#f0fdf4}
+.card.lightGreenTitle>.sectionHead{background:#bbf7d0;color:#14532d;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle>.sectionHead h2{color:#14532d;margin:0}
+.card.lightGreenTitle>.sectionHead button{background:#22c55e;color:#fff}
+
+
+.totalsRow td{background:#f3f4f6;font-weight:700;border-top:2px solid #9ca3af}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>Planificador de secado - Silos de cuarzo</h1>
+<div class="headerBlue"><h1>Planificador de secado - Silos de cuarzo</h1><div class="versionSmall">Última versión: v51 · Fecha: 03/05/2026</div></div>
 <div class="card">
   <div class="grid">
     <div class="field"><label>Camión (t)</label><input id="truckT" type="number" step="0.1" value="28"></div>
@@ -44,9 +68,9 @@
     <div class="box"><b>Última actualización</b><span id="jsonLastUpdate">Sin guardar</span></div>
   </div>
 </div>
-<div class="card">
+<div class="card blueTitle">
   <h2>Importar datos desde SAP</h2>
-  <p class="small">Para pendientes SAP puedes importar Excel/CSV con columnas como <b>Fecha plan. de carga</b>, <b>PRODUCTO</b> y <b>Nº de cargas</b>. Se filtrarán las referencias que contengan <b>RP</b>, <b>FV2000</b>, <b>SAC/SACO/BB/BIGBAG</b> o <b>arena</b>. Las referencias de envasado se pasarán a “Envasados pendientes por día”, salvo si contienen FV016 o FC.</p>
+  <p class="small">Para pendientes SAP puedes importar Excel/CSV con columnas como <b>Fecha plan. de carga</b>, <b>REF REAL</b> y <b>Nº de cargas</b>. Para <b>Cargas previstas de la semana</b> únicamente se utilizará la columna <b>REF REAL</b>; si REF REAL está vacío, la fila no se importará como carga prevista. Las referencias de envasado se pasarán a “Envasados pendientes por día”, salvo si contienen FV016 o FC. En “Referencia envasado” se mostrarán juntas las columnas PRODUCTO, REF REAL y REF SAP cuando existan.</p>
   <div class="grid" style="margin-bottom:8px">
     <div class="field"><label>Fecha inicial pendientes SAP</label><input id="sapStartDate" type="date"></div>
     <div class="field"><label>Fecha final pendientes SAP</label><input id="sapEndDate" type="date"></div>
@@ -57,9 +81,9 @@
   </div>
   <div id="sapImportResult" class="muted">Importa los pendientes SAP para actualizar las cargas previstas de la semana entre las dos fechas indicadas.</div>
 </div>
-<div class="card"><h2>Resumen general</h2><div class="summary" id="generalSummary"></div></div>
+<div class="card blueTitle"><h2>Resumen general</h2><div class="summary" id="generalSummary"></div></div>
 <div class="card"><h2>Comparación de escenarios por lote mínimo</h2><div id="scenarioOutput" class="muted">Pulsa “Comprobar escenarios lote mínimo” para comparar 28, 100, 150, 180 y 400 t.</div></div>
-<div class="card"><h2>Pedido adicional y replanificación</h2>
+<div class="card lightBlueTitle"><h2>Pedido adicional y replanificación</h2>
   <div class="grid">
     <div class="field"><label>Producto seco adicional</label><select id="extraProduct"></select></div>
     <div class="field"><label>Día solicitado</label><select id="extraDay"></select></div>
@@ -69,7 +93,7 @@
   <div class="buttons"><button id="btnExtraReplan" class="secondary">Añadir pedido y replanificar</button><button id="btnCheckExtraAvailability" class="light">Comprobar disponibilidad</button></div>
   <div id="extraResult" class="muted">Añade un pedido extra para comprobar si puede servirse ese día o desde qué día sería posible.</div>
 </div>
-<div class="card"><h2>Anular camiones y replanificación</h2>
+<div class="card lightBlueTitle"><h2>Anular camiones y replanificación</h2>
   <div class="grid">
     <div class="field"><label>Producto seco a anular</label><select id="cancelProduct"></select></div>
     <div class="field"><label>Día de carga</label><select id="cancelDay"></select></div>
@@ -78,7 +102,7 @@
   <div class="buttons"><button id="btnCancelReplan" class="danger">Anular camiones y replanificar</button></div>
   <div id="cancelResult" class="muted">Anula camiones previstos de un producto y día. Después se recalcula toda la planificación.</div>
 </div>
-<div class="card"><h2>Sustituir una orden planificada y replanificar</h2>
+<div class="card lightBlueTitle"><h2>Sustituir una orden planificada y replanificar</h2>
   <div class="grid">
     <div class="field"><label>Día de la orden</label><select id="replaceDay"></select></div>
     <div class="field"><label>Orden planificada a sustituir</label><select id="replaceOrder"></select></div>
@@ -98,7 +122,7 @@
   <div class="buttons"><button id="btnReplaceReplan" class="secondary">Sustituir orden y replanificar</button><button id="btnClearReplacements" class="light">Quitar sustituciones manuales</button></div>
   <div id="replaceResult" class="muted">Primero calcula la previsión. Después selecciona una orden de secado de un día, cámbiala por otro producto/toneladas, indica si procede una hora mínima de inicio y recalcula.</div>
 </div>
-<div class="card"><div class="sectionHead"><h2>Producto húmedo disponible, origen y velocidad de secado</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
+<div class="card lightGreenTitle collapsed"><div class="sectionHead"><h2>Producto húmedo disponible, origen y velocidad de secado</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
   <div class="grid noPrint" style="margin-bottom:10px">
     <div class="field"><label>Nuevo producto húmedo</label><input id="newWetProduct" type="text" placeholder="Ej.: RP090H"></div>
     <div class="field"><label>Disponible inicial (t)</label><input id="newWetTons" type="number" step="1" value="0"></div>
@@ -107,15 +131,15 @@
     <div class="field"><label>&nbsp;</label><button id="btnDeleteWetProduct" type="button" class="danger">Eliminar producto húmedo</button></div>
   </div>
   <div class="tableWrap"><table id="wetDryTable"></table></div><div class="small">Se incluye RP0208H como origen porque lo pediste como origen por defecto de RP0508S. Puedes añadir nuevos productos húmedos para que aparezcan como origen seleccionable.</div></div>
-<div class="card"><div class="sectionHead"><h2>Silos secos</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="siloTable"></table></div></div>
-<div class="card"><div class="sectionHead"><h2>Envasados disponibles</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
+<div class="card lightGreenTitle collapsed"><div class="sectionHead"><h2>Silos secos</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="siloTable"></table></div></div>
+<div class="card lightGreenTitle collapsed"><div class="sectionHead"><h2>Envasados disponibles</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div>
   <p class="small">Importa Excel. Se añaden solo filas con <b>DISPONIBLE (t) &gt; 0</b>. Columnas leídas: PRODUCTO, PALETS/BB, DISPONIBLE (t), REF REAL y REF SAP.</p>
   <div class="buttons"><button id="btnImportPackExcel" class="secondary">Importar envasados Excel</button><button id="btnClearPack" class="light">Borrar envasados</button><input id="packExcelFile" class="hidden" type="file" accept=".xlsx,.xls,.csv"></div>
   <div class="tableWrap"><table id="packTable"></table></div><div id="packResult" class="muted">Sin envasados importados.</div>
 </div>
-<div class="card"><div class="sectionHead"><h2>Cargas previstas de la semana</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="demandTable"></table></div></div>
-<div class="card"><div class="sectionHead"><h2>Envasados pendientes por día</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="packPendingTable"></table></div><div class="small">Resumen de las referencias de envasado pendientes, situadas por día después de las cargas previstas de la semana.</div></div>
-<div class="card"><div class="sectionHead"><h2>Horas de vaciado por cambio de producto</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="changeTable"></table></div><div class="small">Producto inicial en la primera columna y producto final en la primera fila. Enter avanza a la siguiente columna.</div></div>
+<div class="card greenTitle"><div class="sectionHead"><h2>Cargas previstas de la semana</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="demandTable"></table></div></div>
+<div class="card greenTitle"><div class="sectionHead"><h2>Envasados pendientes por día</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="packPendingTable"></table></div><div class="small">Resumen de las referencias de envasado pendientes, situadas por día después de las cargas previstas de la semana.</div></div>
+<div class="card lightGreenTitle collapsed"><div class="sectionHead"><h2>Horas de vaciado por cambio de producto</h2><button onclick="toggleCard(this)">Mostrar/Ocultar</button></div><div class="tableWrap"><table id="changeTable"></table></div><div class="small">Producto inicial en la primera columna y producto final en la primera fila. Enter avanza a la siguiente columna.</div></div>
 <div class="card"><h2>Previsión calculada</h2><div id="planOutput" class="muted">Sin previsión calculada.</div></div>
 </div>
 <script>
@@ -131,6 +155,9 @@ let maintenanceWindows=[];
 let packagedItems=[];
 let sapPendingProducts=[];
 let sapPendingDateLabels=null;
+let sapBeforeStartLoads={};
+let sapBeforeStartLabel=null;
+let sapImportedLoads={};
 let jsonDirectoryHandle=null;
 const JSON_FILE_NAME='planificador_secado_cuarzo.json';
 let autoSaveTimer=null;
@@ -164,7 +191,21 @@ function stockForPendingProduct(p){
   });
   return total;
 }
-function weeklyPackDemandTons(p){const sid=safeId(p);let total=0;DAYS.forEach((_,i)=>{total+=n(document.getElementById(`dem_${sid}_${i}`)?.value)});return total}
+function weeklyPackDemandTons(p){return totalDemandInputsForProduct(p)}
+
+function hasSapBeforeStartColumn(){
+  return !!(sapBeforeStartLabel || Object.keys(sapBeforeStartLoads||{}).length);
+}
+function beforeStartValueFromInput(p){
+  return n(document.getElementById(`dem_${safeId(p)}_before`)?.value);
+}
+function totalDemandInputsForProduct(p){
+  const sid=safeId(p);
+  let total=beforeStartValueFromInput(p);
+  DAYS.forEach((_,i)=>{total+=n(document.getElementById(`dem_${sid}_${i}`)?.value)});
+  return total;
+}
+
 function updatePackRowVisibility(){packPendingProducts().forEach(p=>{const sid=safeId(p), show=weeklyPackDemandTons(p)>0;let dr=document.getElementById('demandRow_'+sid);if(dr)dr.style.display=show?'':'none';});}
 function productOptions(sel){return dryProducts.map(p=>`<option value="${p}" ${p===sel?'selected':''}>${p}</option>`).join('')} function wetOptions(sel){return wetProductsDefault.map(w=>`<option value="${w[0]}" ${w[0]===sel?'selected':''}>${w[0]}</option>`).join('')} function siloOptions(sel){return siloDefaults.map(s=>`<option value="${s[0]}" ${s[0]===sel?'selected':''}>${s[0]} - ${document.getElementById('siloProd_'+s[0])?.value||s[1]}</option>`).join('')}
 function toggleCard(btn){btn.closest('.card').classList.toggle('collapsed')}
@@ -225,12 +266,14 @@ function safeId(p){return String(p).replace(/[^A-Za-z0-9_-]/g,'_')}
 function renderDemand(){
   let prods=orderedProductsForDemand().filter(p=>!isPack(p)&&!isSapPackRef(p));
   let headers=sapPendingDateLabels&&sapPendingDateLabels.length?sapPendingDateLabels:DAYS.map(d=>({label:d,sub:'camiones / t env.'}));
-  let html='<tr><th>Producto / referencia</th>'+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'camiones / t env.'}</span></th>`).join('')+'<th>Camiones semana</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
+  const before=hasSapBeforeStartColumn();
+  let html='<tr><th>Producto / referencia</th>'+(before?`<th>${sapBeforeStartLabel||'Anterior fecha inicial'}<br><span class="small">pendiente anterior</span></th>`:'')+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'camiones / t env.'}</span></th>`).join('')+'<th>Camiones semana</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
   prods.forEach((p,r)=>{
     const sid=safeId(p), step=isPack(p)?'0.01':'1', title=isPack(p)?'Toneladas de envasado pendientes':'Camiones pendientes';
-    const packHidden=isPack(p)?' style="display:none" class="packDemandRow"':'';
-    html+=`<tr id="demandRow_${sid}"${packHidden}><td class="left">${productLabel(p)}${isPack(p)?'<br><span class="small">Envasado: introducir toneladas</span>':''}</td>`+DAYS.map((_,i)=>`<td class="center"><input class="demandInput" title="${title}" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${step}" id="dem_${sid}_${i}" value="0"></td>`).join('')+`<td id="demTrucks_${sid}">0</td><td id="demTons_${sid}">0</td><td id="stock_${sid}">0</td><td id="def_${sid}">0</td></tr>`;
+    const beforeCell=before?`<td class="center"><input class="demandInput beforeStartInput" title="Pendiente anterior a fecha inicial" data-r="${r}" data-c="before" data-product="${p}" type="number" min="0" step="${step}" id="dem_${sid}_before" value="${sapBeforeStartLoads?.[p]||0}"></td>`:'';
+    html+=`<tr id="demandRow_${sid}"><td class="left">${productLabel(p)}</td>${beforeCell}`+DAYS.map((_,i)=>`<td class="center"><input class="demandInput" title="${title}" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${step}" id="dem_${sid}_${i}" value="0"></td>`).join('')+`<td id="demTrucks_${sid}">0</td><td id="demTons_${sid}">0</td><td id="stock_${sid}">0</td><td id="def_${sid}">0</td></tr>`;
   });
+  html+=`<tr class="totalsRow"><td class="left"><b>TOTAL</b></td>${before?'<td id="demTotal_before"><b>0</b></td>':''}${DAYS.map((_,i)=>`<td id="demTotal_${i}"><b>0</b></td>`).join('')}<td id="demTotal_trucks"><b>0</b></td><td id="demTotal_tons"><b>0</b></td><td id="demTotal_stock"><b>0</b></td><td id="demTotal_def"><b>0</b></td></tr>`;
   document.getElementById('demandTable').innerHTML=html;
   document.querySelectorAll('.demandInput').forEach(inp=>inp.addEventListener('keydown',enterDemandNext));
 }
@@ -241,22 +284,29 @@ function renderPackPending(){
   const tbl=document.getElementById('packPendingTable'); if(!tbl)return;
   const packs=packPendingProducts().sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}));
   let headers=sapPendingDateLabels&&sapPendingDateLabels.length?sapPendingDateLabels:DAYS.map(d=>({label:d,sub:'cargas / t'}));
-  let html='<tr><th>Referencia envasado</th>'+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'cargas / t'}</span></th>`).join('')+'<th>Total cargas</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
+  const before=hasSapBeforeStartColumn();
+  let html='<tr><th>Referencia envasado</th>'+(before?`<th>${sapBeforeStartLabel||'Anterior fecha inicial'}<br><span class="small">pendiente anterior</span></th>`:'')+DAYS.map((d,i)=>`<th>${headers[i]?.label||d}<br><span class="small">${headers[i]?.sub||'cargas / t'}</span></th>`).join('')+'<th>Total cargas</th><th>Toneladas semana</th><th>Stock actual</th><th>Déficit inicial</th></tr>';
   let visible=0, truck=n(document.getElementById('truckT')?.value)||28;
   packs.forEach((p,r)=>{
-    const sid=safeId(p); let total=0; let cells='';
-    DAYS.forEach((_,i)=>{const v=n(document.getElementById(`dem_${sid}_${i}`)?.value); total+=v; cells+=`<td class="center"><input class="demandInput packPendingInput" title="Pendiente envasado" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${isPack(p)?'0.01':'1'}" id="dem_${sid}_${i}" value="${v||0}"></td>`});
+    const sid=safeId(p); let total=beforeStartValueFromInput(p)||n(sapBeforeStartLoads?.[p]); let cells='';
+    const beforeCell=before?`<td class="center"><input class="demandInput packPendingInput beforeStartInput" title="Pendiente anterior a fecha inicial" data-r="${r}" data-c="before" data-product="${p}" type="number" min="0" step="${isPack(p)?'0.01':'1'}" id="dem_${sid}_before" value="${sapBeforeStartLoads?.[p]||0}"></td>`:'';
+    DAYS.forEach((_,i)=>{const existing=document.getElementById(`dem_${sid}_${i}`);const v=existing?n(existing.value):n(sapImportedLoads?.[p]?.[i]); total+=v; cells+=`<td class="center"><input class="demandInput packPendingInput" title="Pendiente envasado" data-r="${r}" data-c="${i}" data-product="${p}" type="number" min="0" step="${isPack(p)?'0.01':'1'}" id="dem_${sid}_${i}" value="${v||0}"></td>`});
     const tons=isPack(p)?total:total*truck;
     const stock=stockForPendingProduct(p);
     const deficit=Math.max(0,tons-stock);
-    if(total>0 || isSapPackRef(p)){
+    // Solo mostrar referencias con nº de cargas/toneladas pendientes mayor que cero.
+    if(total>0.000001){
       visible++;
-      html+=`<tr id="packPendingRow_${sid}"><td class="left">${productLabel(p)}</td>${cells}<td>${isPack(p)?'-':fmtT(total,0)}</td><td>${fmtT(tons,isPack(p)?2:0)}</td><td>${fmtT(stock,2)}</td><td>${fmtT(deficit,2)}</td></tr>`;
+      html+=`<tr id="packPendingRow_${sid}"><td class="left">${productLabel(p)}</td>${beforeCell}${cells}<td>${isPack(p)?'-':fmtT(total,0)}</td><td>${fmtT(tons,isPack(p)?2:0)}</td><td>${fmtT(stock,2)}</td><td>${fmtT(deficit,2)}</td></tr>`;
     }
   });
-  if(!packs.length||!visible){html+='<tr><td colspan="12" class="muted">No hay pedidos de envasado pendientes en la semana.</td></tr>'}
+  if(visible){
+    html+=`<tr class="totalsRow"><td class="left"><b>TOTAL</b></td>${before?'<td id="packTotal_before"><b>0</b></td>':''}${DAYS.map((_,i)=>`<td id="packTotal_${i}"><b>0</b></td>`).join('')}<td id="packTotal_trucks"><b>0</b></td><td id="packTotal_tons"><b>0</b></td><td id="packTotal_stock"><b>0</b></td><td id="packTotal_def"><b>0</b></td></tr>`;
+  }else{
+    html+=`<tr><td colspan="${before?13:12}" class="muted">No hay pedidos de envasado pendientes en la semana.</td></tr>`;
+  }
   tbl.innerHTML=html;
-  tbl.querySelectorAll('.packPendingInput').forEach(inp=>{inp.addEventListener('keydown',enterDemandNext);inp.addEventListener('input',()=>{refreshDemandTotals(false);updateSummary(lastPlan);scheduleAutoSave();});});
+  tbl.querySelectorAll('.packPendingInput').forEach(inp=>{inp.addEventListener('input',()=>{refreshDemandTotals(false);renderPackPending();scheduleAutoSave();});inp.addEventListener('keydown',enterDemandNext);});
 }
 function renderMaintenanceControls(){let el=document.getElementById('maintDay');if(el)el.innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
 
@@ -396,7 +446,31 @@ function printCargasEnvasadosSilosPdf(){
   .small{font-size:8pt;color:#5d6b82}
   .section{break-inside:auto;page-break-inside:auto}
   @page{size:A4 landscape;margin:8mm}
-  </style></head><body>
+  
+.headerBlue{background:#facc15;color:#1f2937;border-radius:14px;padding:12px 14px;margin-bottom:14px;box-shadow:0 1px 4px #0002}
+.headerBlue h1{color:#1f2937;margin:0}
+.versionSmall{font-size:12px;color:#713f12;margin-top:4px}
+.card.blueTitle{border-color:#1d4ed8}
+.card.blueTitle>h2{background:#1d4ed8;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+
+
+.card.greenTitle{border-color:#15803d}
+.card.greenTitle>.sectionHead{background:#15803d;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.greenTitle>.sectionHead h2{color:#fff;margin:0}
+.card.greenTitle>.sectionHead button{background:#bbf7d0;color:#14532d}
+
+
+.card.lightBlueTitle{border-color:#7dd3fc;background:#f0f9ff}
+.card.lightBlueTitle>h2{background:#bae6fd;color:#075985;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle{border-color:#86efac;background:#f0fdf4}
+.card.lightGreenTitle>.sectionHead{background:#bbf7d0;color:#14532d;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle>.sectionHead h2{color:#14532d;margin:0}
+.card.lightGreenTitle>.sectionHead button{background:#22c55e;color:#fff}
+
+
+.totalsRow td{background:#f3f4f6;font-weight:700;border-top:2px solid #9ca3af}
+
+</style></head><body>
   <h1>Planificador de secado - Cargas, envasados y silos</h1>
   <div class="section"><h2>Cargas previstas de la semana</h2>${cargas}</div>
   <div class="section"><h2>Envasados pendientes por día</h2>${envasados}</div>
@@ -407,13 +481,113 @@ function printCargasEnvasadosSilosPdf(){
   setTimeout(()=>w.print(),250);
 }
 
-function printResumenPrevision(){let resumen=document.getElementById('generalSummary').outerHTML;let plan=document.getElementById('planOutput').innerHTML;let w=window.open('', '_blank');if(!w){alert('El navegador ha bloqueado la ventana de impresión. Permite ventanas emergentes para este archivo.');return}w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Resumen y previsión de secado</title><style>body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;margin:18px;color:#172033}h1{font-size:18pt}h2{font-size:14pt;margin-top:18px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{border:1px solid #c8d8f6;border-radius:8px;padding:8px}.kpi b{display:block;font-size:9pt;color:#5d6b82}.kpi span{font-weight:700;font-size:13pt}.tableWrap{overflow:visible;margin:8px 0}table{border-collapse:collapse;width:100%;font-size:9pt}th,td{border:1px solid #d9e2ef;padding:4px;text-align:center}th{background:#eaf1fb}.left{text-align:left}.notice{border:1px solid #fed7aa;background:#fff7ed;border-radius:8px;padding:8px}.notice.alert{border-color:#ef4444;background:#fee2e2;color:#7f1d1d}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.resultDay{break-inside:avoid;margin-top:12px;border-left:4px solid #2563eb;padding-left:8px}.finalStateTable,.wetFinalTable{table-layout:fixed;min-width:0}.finalStateTable .colSilo{width:38px}.finalStateTable .colProduct{width:65px}.finalStateTable .colTons,.finalStateTable .colGap{width:48px}.wetFinalTable .colWetProduct{width:85px}.wetFinalTable .colWetTons{width:60px}@page{size:A4 landscape;margin:10mm}</style></head><body><h1>Planificador de secado - resumen y previsión</h1><h2>Resumen general</h2>${resumen}<h2>Previsión calculada</h2>${plan}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250)}
+function printResumenPrevision(){let resumen=document.getElementById('generalSummary').outerHTML;let plan=document.getElementById('planOutput').innerHTML;let w=window.open('', '_blank');if(!w){alert('El navegador ha bloqueado la ventana de impresión. Permite ventanas emergentes para este archivo.');return}w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Resumen y previsión de secado</title><style>body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;margin:18px;color:#172033}h1{font-size:18pt}h2{font-size:14pt;margin-top:18px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{border:1px solid #c8d8f6;border-radius:8px;padding:8px}.kpi b{display:block;font-size:9pt;color:#5d6b82}.kpi span{font-weight:700;font-size:13pt}.tableWrap{overflow:visible;margin:8px 0}table{border-collapse:collapse;width:100%;font-size:9pt}th,td{border:1px solid #d9e2ef;padding:4px;text-align:center}th{background:#eaf1fb}.left{text-align:left}.notice{border:1px solid #fed7aa;background:#fff7ed;border-radius:8px;padding:8px}.notice.alert{border-color:#ef4444;background:#fee2e2;color:#7f1d1d}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.resultDay{break-inside:avoid;margin-top:12px;border-left:4px solid #2563eb;padding-left:8px}.finalStateTable,.wetFinalTable{table-layout:fixed;min-width:0}.finalStateTable .colSilo{width:38px}.finalStateTable .colProduct{width:65px}.finalStateTable .colTons,.finalStateTable .colGap{width:48px}.wetFinalTable .colWetProduct{width:85px}.wetFinalTable .colWetTons{width:60px}@page{size:A4 landscape;margin:10mm}
+.headerBlue{background:#facc15;color:#1f2937;border-radius:14px;padding:12px 14px;margin-bottom:14px;box-shadow:0 1px 4px #0002}
+.headerBlue h1{color:#1f2937;margin:0}
+.versionSmall{font-size:12px;color:#713f12;margin-top:4px}
+.card.blueTitle{border-color:#1d4ed8}
+.card.blueTitle>h2{background:#1d4ed8;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
 
 
-function getState(){let truck=n(truckT.value),hd=n(hoursDay.value),min=n(minLot.value),max=n(maxLot.value);let wet={},wetEnabled={};wetProductsDefault.forEach(w=>{wet[w[0]]=n(document.getElementById('wetT_'+w[0]).value);wetEnabled[w[0]]=document.getElementById('wetSel_'+w[0]).checked});let dry={};dryProducts.forEach(p=>dry[p]={origin:document.getElementById('origin_'+p).value,rate:n(document.getElementById('rate_'+p).value)||1});let silos=siloDefaults.map(s=>({id:s[0],active:document.getElementById('siloAct_'+s[0])?.checked!==false,product:document.getElementById('siloProd_'+s[0]).value,max:n(document.getElementById('siloMax_'+s[0]).value),cur:n(document.getElementById('siloCur_'+s[0]).value)}));let demand={};allDemandTableProducts().forEach(p=>{const sid=safeId(p);demand[p]=DAYS.map((_,i)=>{const v=n(document.getElementById(`dem_${sid}_${i}`)?.value);return isPack(p)?v:v*truck})});let chg={};dryProducts.forEach(f=>{chg[f]={};dryProducts.forEach(t=>chg[f][t]=n(document.getElementById(`chg_${f}_${t}`).value))});return{packagedItems,truck,hd,min,max,wet,wetEnabled,dry,silos,demand,chg,pct0508:n(pct0508to0104.value)/100,dest0508:dest0508to0104.value,pct0816:n(pct0816to0508.value)/100,dest0816:dest0816to0508.value,maintenance:maintenanceWindows}}
+.card.greenTitle{border-color:#15803d}
+.card.greenTitle>.sectionHead{background:#15803d;color:#fff;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.greenTitle>.sectionHead h2{color:#fff;margin:0}
+.card.greenTitle>.sectionHead button{background:#bbf7d0;color:#14532d}
+
+
+.card.lightBlueTitle{border-color:#7dd3fc;background:#f0f9ff}
+.card.lightBlueTitle>h2{background:#bae6fd;color:#075985;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle{border-color:#86efac;background:#f0fdf4}
+.card.lightGreenTitle>.sectionHead{background:#bbf7d0;color:#14532d;margin:-14px -14px 12px -14px;padding:10px 14px;border-radius:14px 14px 0 0}
+.card.lightGreenTitle>.sectionHead h2{color:#14532d;margin:0}
+.card.lightGreenTitle>.sectionHead button{background:#22c55e;color:#fff}
+
+
+.totalsRow td{background:#f3f4f6;font-weight:700;border-top:2px solid #9ca3af}
+
+</style></head><body><h1>Planificador de secado - resumen y previsión</h1><h2>Resumen general</h2>${resumen}<h2>Previsión calculada</h2>${plan}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250)}
+
+
+function getState(){let truck=n(truckT.value),hd=n(hoursDay.value),min=n(minLot.value),max=n(maxLot.value);let wet={},wetEnabled={};wetProductsDefault.forEach(w=>{wet[w[0]]=n(document.getElementById('wetT_'+w[0]).value);wetEnabled[w[0]]=document.getElementById('wetSel_'+w[0]).checked});let dry={};dryProducts.forEach(p=>dry[p]={origin:document.getElementById('origin_'+p).value,rate:n(document.getElementById('rate_'+p).value)||1});let silos=siloDefaults.map(s=>({id:s[0],active:document.getElementById('siloAct_'+s[0])?.checked!==false,product:document.getElementById('siloProd_'+s[0]).value,max:n(document.getElementById('siloMax_'+s[0]).value),cur:n(document.getElementById('siloCur_'+s[0]).value)}));let demand={};allDemandTableProducts().forEach(p=>{const sid=safeId(p);const before=n(document.getElementById(`dem_${sid}_before`)?.value);demand[p]=DAYS.map((_,i)=>{let v=n(document.getElementById(`dem_${sid}_${i}`)?.value);if(i===0)v+=before;return isPack(p)?v:v*truck})});let chg={};dryProducts.forEach(f=>{chg[f]={};dryProducts.forEach(t=>chg[f][t]=n(document.getElementById(`chg_${f}_${t}`).value))});return{packagedItems,truck,hd,min,max,wet,wetEnabled,dry,silos,demand,chg,pct0508:n(pct0508to0104.value)/100,dest0508:dest0508to0104.value,pct0816:n(pct0816to0508.value)/100,dest0816:dest0816to0508.value,maintenance:maintenanceWindows,sapBeforeStartLoads,sapBeforeStartLabel,sapImportedLoads}}
 function stockByProduct(st){let o={};allProducts().forEach(p=>o[p]=0);(wetProductsDefault||[]).forEach(w=>{if(o[w[0]]==null)o[w[0]]=0;o[w[0]]=n(st.wet?.[w[0]]);});st.silos.forEach(s=>{if(s.active!==false&&o[s.product]!=null)o[s.product]+=s.cur});(st.packagedItems||packagedItems||[]).forEach(x=>{o[packId(x)]=n(x.disponible)});return o}
 function refreshSiloGaps(){siloDefaults.forEach(s=>{let id=s[0],active=document.getElementById('siloAct_'+id)?.checked!==false,max=n(document.getElementById('siloMax_'+id)?.value),cur=n(document.getElementById('siloCur_'+id)?.value),gap=active?Math.max(0,max-cur):0,pct=(active&&max>0)?gap/max*100:0;let row=document.getElementById('siloRow_'+id);if(row)row.classList.toggle('inactiveSilo',!active);let g=document.getElementById('siloGap_'+id);if(g){g.textContent=active?fmtT(gap,0):'No activo';document.getElementById('siloGapPct_'+id).textContent=active?fmtT(pct,1)+'%':'-'}})}
-function refreshDemandTotals(){let st=getState(),stock=stockByProduct(st),truck=st.truck;allDemandTableProducts().forEach(p=>{const sid=safeId(p);let raw=0;DAYS.forEach((_,i)=>raw+=n(document.getElementById(`dem_${sid}_${i}`)?.value));let tons=isPack(p)?raw:raw*truck;let a=document.getElementById('demTrucks_'+sid),b=document.getElementById('demTons_'+sid),c=document.getElementById('stock_'+sid),d=document.getElementById('def_'+sid);let stk=(isSapPackRef(p)&&!isPack(p))?stockForPendingProduct(p):(stock[p]||0);if(a)a.textContent=isPack(p)?'-':fmtT(raw,0);if(b)b.textContent=fmtT(tons,isPack(p)?2:0);if(c)c.textContent=fmtT(stk,isPack(p)?2:0);if(d)d.textContent=fmtT(Math.max(0,tons-stk),isPack(p)?2:0);let row=document.getElementById('demandRow_'+sid);if(row&&(isPack(p)||isSapPackRef(p)))row.style.display='none';});renderPackPending();updatePackRowVisibility()}
+function refreshDemandTotals(){
+  let st=getState(),stock=stockByProduct(st),truck=st.truck;
+  allDemandTableProducts().forEach(p=>{
+    const sid=safeId(p);
+    let raw=totalDemandInputsForProduct(p);
+    let tons=isPack(p)?raw:raw*truck;
+    let stk=(isSapPackRef(p)&&!isPack(p))?stockForPendingProduct(p):(stock[p]||0);
+
+    let a=document.getElementById('demTrucks_'+sid),
+        b=document.getElementById('demTons_'+sid),
+        c=document.getElementById('stock_'+sid),
+        d=document.getElementById('def_'+sid);
+
+    if(a)a.textContent=isPack(p)?'-':fmtT(raw,0);
+    if(b)b.textContent=fmtT(tons,isPack(p)?2:0);
+    if(c)c.textContent=fmtT(stk,isPack(p)?2:0);
+    if(d)d.textContent=fmtT(Math.max(0,tons-stk),isPack(p)?2:0);
+
+    let row=document.getElementById('demandRow_'+sid);
+    if(row&&(isPack(p)||isSapPackRef(p)))row.style.display='none';
+  });
+
+  renderPackPending();
+  updatePackRowVisibility();
+
+  // Totales Cargas previstas
+  let totalBefore=0,totalTr=0,totalTon=0,totalStock=0,totalDef=0;
+  let cols=[0,0,0,0,0,0,0];
+
+  document.querySelectorAll('#demandTable tr[id^="demandRow_"]').forEach(tr=>{
+    const inputs=tr.querySelectorAll('input');
+    inputs.forEach(inp=>{
+      if(inp.dataset.c==='before') totalBefore+=n(inp.value);
+      else cols[Number(inp.dataset.c)||0]+=n(inp.value);
+    });
+
+    const tds=tr.querySelectorAll('td');
+    const vals=Array.from(tds).slice(-4).map(td=>n(td.textContent.replace(/\./g,'').replace(',','.')));
+    totalTr+=vals[0]||0;
+    totalTon+=vals[1]||0;
+    totalStock+=vals[2]||0;
+    totalDef+=vals[3]||0;
+  });
+
+  if(document.getElementById('demTotal_before'))document.getElementById('demTotal_before').innerHTML='<b>'+fmtT(totalBefore,0)+'</b>';
+  DAYS.forEach((_,i)=>{let el=document.getElementById(`demTotal_${i}`);if(el)el.innerHTML='<b>'+fmtT(cols[i],0)+'</b>';});
+  if(document.getElementById('demTotal_trucks'))document.getElementById('demTotal_trucks').innerHTML='<b>'+fmtT(totalTr,0)+'</b>';
+  if(document.getElementById('demTotal_tons'))document.getElementById('demTotal_tons').innerHTML='<b>'+fmtT(totalTon,0)+'</b>';
+  if(document.getElementById('demTotal_stock'))document.getElementById('demTotal_stock').innerHTML='<b>'+fmtT(totalStock,0)+'</b>';
+  if(document.getElementById('demTotal_def'))document.getElementById('demTotal_def').innerHTML='<b>'+fmtT(totalDef,0)+'</b>';
+
+  // Totales Envasados
+  let pBefore=0,pTr=0,pTon=0,pStock=0,pDef=0;
+  let pCols=[0,0,0,0,0,0,0];
+
+  document.querySelectorAll('#packPendingTable tr[id^="packPendingRow_"]').forEach(tr=>{
+    const inputs=tr.querySelectorAll('input');
+    inputs.forEach(inp=>{
+      if(inp.dataset.c==='before') pBefore+=n(inp.value);
+      else pCols[Number(inp.dataset.c)||0]+=n(inp.value);
+    });
+
+    const tds=tr.querySelectorAll('td');
+    const vals=Array.from(tds).slice(-4).map(td=>n(td.textContent.replace(/\./g,'').replace(',','.')));
+    pTr+=vals[0]||0;
+    pTon+=vals[1]||0;
+    pStock+=vals[2]||0;
+    pDef+=vals[3]||0;
+  });
+
+  if(document.getElementById('packTotal_before'))document.getElementById('packTotal_before').innerHTML='<b>'+fmtT(pBefore,0)+'</b>';
+  DAYS.forEach((_,i)=>{let el=document.getElementById(`packTotal_${i}`);if(el)el.innerHTML='<b>'+fmtT(pCols[i],0)+'</b>';});
+  if(document.getElementById('packTotal_trucks'))document.getElementById('packTotal_trucks').innerHTML='<b>'+fmtT(pTr,0)+'</b>';
+  if(document.getElementById('packTotal_tons'))document.getElementById('packTotal_tons').innerHTML='<b>'+fmtT(pTon,0)+'</b>';
+  if(document.getElementById('packTotal_stock'))document.getElementById('packTotal_stock').innerHTML='<b>'+fmtT(pStock,0)+'</b>';
+  if(document.getElementById('packTotal_def'))document.getElementById('packTotal_def').innerHTML='<b>'+fmtT(pDef,0)+'</b>';
+}
 function parseTimeInputToHours(v){if(!v)return null;let parts=String(v).split(':');let h=Number(parts[0]||0),m=Number(parts[1]||0);if(!isFinite(h)||!isFinite(m))return null;return Math.max(0,h+m/60)}
 function hoursToTimeInput(h){if(h==null||!isFinite(h))return '';let hh=Math.floor(h)%24,mm=Math.round((h-Math.floor(h))*60);if(mm>=60){hh=(hh+1)%24;mm=0}return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')}
 function updateSummary(plan){let st=getState(),activeSilos=st.silos.filter(s=>s.active!==false),cap=activeSilos.reduce((a,s)=>a+s.max,0),cur=activeSilos.reduce((a,s)=>a+s.cur,0),gap=cap-cur,weekly=0;allProducts().forEach(p=>weekly+=(st.demand[p]||[]).reduce((a,b)=>a+b,0));let planned=plan?plan.totalDry:0,dryH=plan?plan.dryHours:0,emptyH=plan?plan.emptyHours:0,avg=dryH>0?planned/dryH:0,status=plan?plan.status:'Sin calcular',cls=status==='OK'?'ok':(status==='Sin calcular'?'warn':'bad');document.getElementById('generalSummary').innerHTML=`<div class="kpi"><b>Capacidad total</b><span>${fmtT(cap,0)} t</span></div><div class="kpi"><b>Stock actual</b><span>${fmtT(cur,0)} t</span></div><div class="kpi"><b>Hueco total</b><span>${fmtT(gap,0)} t</span></div><div class="kpi"><b>Cargas semanal</b><span>${fmtT(weekly,0)} t</span></div><div class="kpi"><b>Secado planificado</b><span>${fmtT(planned,1)} t</span></div><div class="kpi"><b>Media secado (t/h)</b><span>${fmtT(avg,1)}</span></div><div class="kpi"><b>Horas y minutos secando</b><span>${hm(dryH)}</span></div><div class="kpi"><b>Horas y minutos vaciado</b><span>${hm(emptyH)}</span></div><div class="kpi"><b>Estado</b><span class="pill ${cls}">${status}</span></div>`}
@@ -864,6 +1038,27 @@ function getSapPendingProduct(row){
   if(v) return String(v).trim();
   return '';
 }
+function getSapPendingRefReal(row){
+  let v=getRowFieldLoose(row,['REF REAL','Ref real','Referencia real','PRODUCTO CLIENTE','Producto cliente','P.REAL','P REAL','Texto adicional 4']);
+  return String(v||'').trim();
+}
+function getSapPendingRefSap(row){
+  let v=getRowFieldLoose(row,['REF SAP','Ref SAP','Referencia SAP','PRODUCTO SAP','Producto SAP','Material SAP','Código SAP','Codigo SAP','Material','Artículo','Articulo','Texto adicional 3']);
+  return String(v||'').trim();
+}
+function buildSapPendingReference(row){
+  const producto=getSapPendingProduct(row);
+  const refReal=getSapPendingRefReal(row);
+  const refSap=getSapPendingRefSap(row);
+  const packProbe=[producto,refReal,refSap].filter(Boolean).join(' ');
+  // Envasados: en la columna “Referencia envasado” se muestran PRODUCTO | REF REAL | REF SAP.
+  if(isSapPackRef(packProbe)){
+    return [producto,refReal,refSap].filter(v=>String(v||'').trim()).join(' | ');
+  }
+  // Cargas previstas de la semana: SOLO se utiliza la columna REF REAL.
+  // Si REF REAL está vacío, la fila no se importará a cargas previstas.
+  return String(refReal||'').trim();
+}
 function getSapPendingDate(row){
   let v=getRowFieldLoose(row,['Fecha plan. de carga','Fecha plan de carga','Fecha_plan_de_carga','Fecha planificada de carga','Fecha planificada','Fecha carga','Fecha','Día','Dia','Date']);
   if(v) return v;
@@ -995,7 +1190,7 @@ function orderedProductsForDemand(){
   // Orden fijo solicitado y añade productos húmedos de la tabla.
   return demandProducts().sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||String(a).localeCompare(String(b),'es',{numeric:true,sensitivity:'base'}));
 }
-function resetDemandTableValues(){allDemandTableProducts().forEach(p=>DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=0;}));}
+function resetDemandTableValues(){allDemandTableProducts().forEach(p=>{let b=document.getElementById(`dem_${safeId(p)}_before`);if(b)b.value=0;DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=0;});});}
 function readExcelOrCsvFile(file,onRows,out){
   const ext=(file.name.split('.').pop()||'').toLowerCase();
   const reader=new FileReader();
@@ -1017,32 +1212,34 @@ function importSapPendingFile(e){
       const dates=buildSapDateRange();
       const keyToCol={}; dates.forEach((d,i)=>keyToCol[dateKeyLocal(d)]=i);
       sapPendingDateLabels=DAYS.map((d,i)=>dates[i]?{label:displayDateShort(dates[i]),sub:DAYS[dates[i].getDay()===0?6:dates[i].getDay()-1]}:{label:'',sub:''});
-      const agg={}; let ignored=[], read=0;
+      const agg={}; const aggBefore={}; let ignored=[], read=0;
       rows.forEach((row,idx)=>{
-        const product=getSapPendingProduct(row);
+        const product=buildSapPendingReference(row);
         if(!product||!isSapPendingProductWanted(product))return;
         read++;
         let dt=parseSapDateValue(getSapPendingDate(row));
         if(!dt){ignored.push(`Fila ${idx+2}: fecha no reconocida para ${product}`);return;}
-        // Si la fecha del pendiente SAP es anterior a la fecha inicial seleccionada, se cambia y se acumula en la fecha inicial.
-        if(dt<dates[0]) dt=new Date(dates[0].getFullYear(),dates[0].getMonth(),dates[0].getDate());
-        const col=keyToCol[dateKeyLocal(dt)];
-        if(col==null)return; // posterior al rango elegido
+        const isBefore=dt<dates[0];
+        const col=isBefore?null:keyToCol[dateKeyLocal(dt)];
+        if(!isBefore&&col==null)return; // posterior al rango elegido
         let qty=numberFromCsv(getSapPendingLoads(row));
         if(!qty){let tons=numberFromCsv(getRowFieldLoose(row,['Toneladas','Cantidad_t','T','Peso','Cantidad'])); if(tons)qty=tons/(n(truckT.value)||28);}
         // Si no hay columna de nº de cargas, asumimos que cada fila del Excel representa 1 carga/camión.
         if(!qty) qty=1;
         if(qty<=0){ignored.push(`Fila ${idx+2}: nº de cargas vacío o cero para ${product}`);return;}
         if(!agg[product])agg[product]=DAYS.map(()=>0);
-        agg[product][col]+=qty;
+        if(isBefore) aggBefore[product]=(aggBefore[product]||0)+qty;
+        else agg[product][col]+=qty;
       });
-      const importedProducts=Object.keys(agg).sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||a.localeCompare(b,'es'));
-      sapPendingProducts=importedProducts.filter(p=>!dryProducts.includes(p)&&!packagedItems.some(x=>packId(x)===p));
-      renderDemand();renderAdditionalOrder();renderCancelOrder();renderReplacementOrder();renderPackPending();
+      const importedProducts=Array.from(new Set(Object.keys(agg).concat(Object.keys(aggBefore)))).sort((a,b)=>sapProductGroup(a)-sapProductGroup(b)||a.localeCompare(b,'es'));
+      sapImportedLoads=agg;sapBeforeStartLoads=aggBefore;sapBeforeStartLabel='Anterior a '+displayDateShort(dates[0]);sapPendingProducts=importedProducts.filter(p=>!dryProducts.includes(p)&&!packagedItems.some(x=>packId(x)===p));
+      renderDemand();renderAdditionalOrder();renderCancelOrder();renderReplacementOrder();
       resetDemandTableValues();
-      importedProducts.forEach(p=>DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=agg[p][i]||0;}));
+      importedProducts.filter(p=>!isSapPackRef(p)&&!isPack(p)).forEach(p=>{let be=document.getElementById(`dem_${safeId(p)}_before`);if(be)be.value=aggBefore[p]||0;DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=(agg[p]&&agg[p][i])||0;});});
+      renderPackPending();
+      importedProducts.filter(p=>isSapPackRef(p)||isPack(p)).forEach(p=>{let be=document.getElementById(`dem_${safeId(p)}_before`);if(be)be.value=aggBefore[p]||0;DAYS.forEach((_,i)=>{let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=(agg[p]&&agg[p][i])||0;});});
       refreshDemandTotals(false);renderPackPending();calculatePlan();scheduleAutoSave();
-      const total=importedProducts.reduce((a,p)=>a+agg[p].reduce((x,y)=>x+y,0),0);
+      const total=importedProducts.reduce((a,p)=>a+((agg[p]||DAYS.map(()=>0)).reduce((x,y)=>x+y,0))+(aggBefore[p]||0),0);
       out.innerHTML=`<div class="notice ok"><b>Pendientes SAP importados.</b><br>Fichero: ${file.name}. Periodo: ${displayDateShort(dates[0])} a ${displayDateShort(dates[dates.length-1])}. Filas leídas con RP/FV2000/SAC/arena, excluyendo FC/FV016: ${read}. Productos importados: ${importedProducts.length}. Nº total de cargas: ${fmtT(total,0)}.</div>`+(ignored.length?`<div class="notice alert"><b>Filas no importadas:</b><br>${ignored.slice(0,12).join('<br>')}${ignored.length>12?'<br>...':''}</div>`:'');
     }catch(err){out.innerHTML=`<div class="notice alert"><b>Error importando pendientes SAP:</b> ${err.message}</div>`;}
     e.target.value='';
@@ -1092,8 +1289,8 @@ async function autoSaveNow(){if(!jsonDirectoryHandle){updateJsonInfo('Sin guarda
 
 function exportJSON(){let data=buildJsonData();let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=JSON_FILE_NAME;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);applyState(d);lastPlan=d.lastPlan||null;if(lastPlan)renderPlan(lastPlan);else document.getElementById('planOutput').innerHTML='Sin previsión calculada.';updateSummary(lastPlan);refreshReplacementOrders();scheduleAutoSave();alert('JSON importado correctamente.')}catch(err){alert('No se pudo importar el JSON: '+err.message)}};r.readAsText(f);e.target.value=''}
-function applyState(d){applyingState=true;if(Array.isArray(d.wetProductsList)){d.wetProductsList.forEach(w=>{if(Array.isArray(w)&&w[0]&&!wetProductsDefault.some(x=>x[0]===w[0]))wetProductsDefault.push([w[0],n(w[1]),w[2]!==false]);});renderWetDry();renderDeleteWetSelector();}packagedItems=Array.isArray(d.packagedItems)?d.packagedItems:[];sapPendingProducts=Array.isArray(d.sapPendingProducts)?d.sapPendingProducts:[];sapPendingDateLabels=Array.isArray(d.sapPendingDateLabels)?d.sapPendingDateLabels:null;renderPackaged();renderDemand();renderAdditionalOrder();renderCancelOrder();truckT.value=d.truck??28;hoursDay.value=d.hd??24;minLot.value=d.min??180;maxLot.value=d.max??400;pct0508to0104.value=(d.pct0508??0.08)*100;pct0816to0508.value=(d.pct0816??0.12)*100;wetProductsDefault.forEach(w=>{if(d.wet?.[w[0]]!=null)document.getElementById('wetT_'+w[0]).value=d.wet[w[0]];if(d.wetEnabled?.[w[0]]!=null)document.getElementById('wetSel_'+w[0]).checked=d.wetEnabled[w[0]]});dryProducts.forEach(p=>{if(d.dry?.[p]){document.getElementById('origin_'+p).value=d.dry[p].origin;document.getElementById('rate_'+p).value=d.dry[p].rate}});(d.silos||[]).forEach(s=>{if(document.getElementById('siloProd_'+s.id)){document.getElementById('siloProd_'+s.id).value=s.product;document.getElementById('siloMax_'+s.id).value=s.max;document.getElementById('siloCur_'+s.id).value=s.cur;if(document.getElementById('siloAct_'+s.id))document.getElementById('siloAct_'+s.id).checked=s.active!==false}});allDemandTableProducts().forEach(p=>DAYS.forEach((_,i)=>{if(d.demand?.[p]?.[i]!=null){let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=isPack(p)?d.demand[p][i]:d.demand[p][i]/(d.truck||28)}}));dryProducts.forEach(f=>dryProducts.forEach(t=>{if(d.chg?.[f]?.[t]!=null)document.getElementById(`chg_${f}_${t}`).value=d.chg[f][t]}));renderDestinations();dest0508to0104.value=d.dest0508||'C8';dest0816to0508.value=d.dest0816||'C13';manualReplacements=Array.isArray(d.manualReplacements)?d.manualReplacements:[];maintenanceWindows=Array.isArray(d.maintenanceWindows)?d.maintenanceWindows:(Array.isArray(d.maintenance)?d.maintenance:[]);refreshSiloGaps();refreshDemandTotals();applyingState=false;refreshReplacementOrders()}
-function restoreDefaults(){lastPlan=null;manualReplacements=[];maintenanceWindows=[];packagedItems=[];sapPendingProducts=[];sapPendingDateLabels=null;wetProductsDefault.splice(0,wetProductsDefault.length,...JSON.parse(JSON.stringify(wetProductsInitial)));document.getElementById('planOutput').innerHTML='Sin previsión calculada.';renderAll()}
+function applyState(d){applyingState=true;if(Array.isArray(d.wetProductsList)){d.wetProductsList.forEach(w=>{if(Array.isArray(w)&&w[0]&&!wetProductsDefault.some(x=>x[0]===w[0]))wetProductsDefault.push([w[0],n(w[1]),w[2]!==false]);});renderWetDry();renderDeleteWetSelector();}packagedItems=Array.isArray(d.packagedItems)?d.packagedItems:[];sapPendingProducts=Array.isArray(d.sapPendingProducts)?d.sapPendingProducts:[];sapPendingDateLabels=Array.isArray(d.sapPendingDateLabels)?d.sapPendingDateLabels:null;sapBeforeStartLoads=d.sapBeforeStartLoads||{};sapBeforeStartLabel=d.sapBeforeStartLabel||null;sapImportedLoads=d.sapImportedLoads||{};renderPackaged();renderDemand();renderAdditionalOrder();renderCancelOrder();truckT.value=d.truck??28;hoursDay.value=d.hd??24;minLot.value=d.min??180;maxLot.value=d.max??400;pct0508to0104.value=(d.pct0508??0.08)*100;pct0816to0508.value=(d.pct0816??0.12)*100;wetProductsDefault.forEach(w=>{if(d.wet?.[w[0]]!=null)document.getElementById('wetT_'+w[0]).value=d.wet[w[0]];if(d.wetEnabled?.[w[0]]!=null)document.getElementById('wetSel_'+w[0]).checked=d.wetEnabled[w[0]]});dryProducts.forEach(p=>{if(d.dry?.[p]){document.getElementById('origin_'+p).value=d.dry[p].origin;document.getElementById('rate_'+p).value=d.dry[p].rate}});(d.silos||[]).forEach(s=>{if(document.getElementById('siloProd_'+s.id)){document.getElementById('siloProd_'+s.id).value=s.product;document.getElementById('siloMax_'+s.id).value=s.max;document.getElementById('siloCur_'+s.id).value=s.cur;if(document.getElementById('siloAct_'+s.id))document.getElementById('siloAct_'+s.id).checked=s.active!==false}});allDemandTableProducts().forEach(p=>DAYS.forEach((_,i)=>{if(i===0&&d.sapBeforeStartLoads?.[p]!=null){let be=document.getElementById(`dem_${safeId(p)}_before`);if(be)be.value=d.sapBeforeStartLoads[p];}if(d.demand?.[p]?.[i]!=null){let el=document.getElementById(`dem_${safeId(p)}_${i}`);if(el)el.value=isPack(p)?d.demand[p][i]:d.demand[p][i]/(d.truck||28)}}));dryProducts.forEach(f=>dryProducts.forEach(t=>{if(d.chg?.[f]?.[t]!=null)document.getElementById(`chg_${f}_${t}`).value=d.chg[f][t]}));renderDestinations();dest0508to0104.value=d.dest0508||'C8';dest0816to0508.value=d.dest0816||'C13';manualReplacements=Array.isArray(d.manualReplacements)?d.manualReplacements:[];maintenanceWindows=Array.isArray(d.maintenanceWindows)?d.maintenanceWindows:(Array.isArray(d.maintenance)?d.maintenance:[]);refreshSiloGaps();refreshDemandTotals();applyingState=false;refreshReplacementOrders()}
+function restoreDefaults(){lastPlan=null;manualReplacements=[];maintenanceWindows=[];packagedItems=[];sapPendingProducts=[];sapPendingDateLabels=null;sapBeforeStartLoads={};sapBeforeStartLabel=null;sapImportedLoads={};wetProductsDefault.splice(0,wetProductsDefault.length,...JSON.parse(JSON.stringify(wetProductsInitial)));document.getElementById('planOutput').innerHTML='Sin previsión calculada.';renderAll()}
 function clearPlan(){lastPlan=null;manualReplacements=[];maintenanceWindows=[];document.getElementById('planOutput').innerHTML='Previsión anulada.';updateSummary(null)}
 window.addEventListener('DOMContentLoaded',renderAll);
 </script>
